@@ -4,7 +4,7 @@ interface user {
     firstName: string,
     lastName: string,
     email: string,
-    password: string,
+    password: string | undefined,
     accountType: String,
     active: boolean,
     approved: boolean,
@@ -74,4 +74,4 @@ const userSchema = new Schema<user>(
 );
 
 // Export the Mongoose model for the user schema, using the name "user"
-module.exports = model("User", userSchema);
+export default model("User", userSchema);

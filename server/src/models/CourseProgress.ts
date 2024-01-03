@@ -16,4 +16,4 @@ const courseProgressSchema = new Schema<courseProgress>({
     }],
 });
 
-module.exports = model("CourseProgress", courseProgressSchema);
+export default model("CourseProgress", courseProgressSchema);

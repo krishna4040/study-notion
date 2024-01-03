@@ -29,5 +29,4 @@ const ratingAndReviewSchema = new Schema<RatingAndReview>({
     },
 });
 
-// Export the RatingAndReview model
-module.exports = model("RatingAndReview", ratingAndReviewSchema);
+export default model("RatingAndReview", ratingAndReviewSchema);

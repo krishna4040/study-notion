@@ -14,4 +14,4 @@ const SubSectionSchema = new Schema<subSection>({
     videoUrl: String,
 });
 
-module.exports = model("SubSection", SubSectionSchema);
+export default model("SubSection", SubSectionSchema);
