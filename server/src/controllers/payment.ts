@@ -89,6 +89,7 @@ export const verifySignature = async (req: Request, res: Response) => {
 
             //find the student and add the course to their list enrolled courses me 
             const enrolledStudent = await User.findOneAndUpdate({ _id: userId }, { $push: { courses: courseId } }, { new: true });
+            await Course.findByIdAndUpdate(courseId, { $inc: { sold: 1 } });
 
             //mail send krdo confirmation wala
             const emailResponse = await mailSender(enrolledStudent?.email!, "Congratulations from CodeHelp", courseEnrollmentEmail(enrolledCourse.courseName, enrolledStudent?.firstName!));

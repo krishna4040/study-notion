@@ -41,7 +41,7 @@ router.post("/addSubSection", auth, isInstructor, createSubSection)
 // Get all Registered Courses
 router.get("/getAllCourses", getAllCourses)
 // Get Details for a Specific Courses
-router.get("/getCourseDetails", getCourseDetails)
+router.get("/getCourseDetails/:courseId", getCourseDetails)
 // Get all Courses Under a Specific Instructor
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 
@@ -57,7 +57,7 @@ router.post("/getCategoryPageDetails", auth, isAdmin, categoryPageDetails)
 //                                      Rating and Review
 // ********************************************************************************************************
 router.post("/createRating", auth, isStudent, createRating)
-router.get("/getAverageRating", getAverageRating)
+router.get("/getAverageRating/:courseId", getAverageRating)
 // router.get("/getReviews", getAllRating)
 
 export default router
