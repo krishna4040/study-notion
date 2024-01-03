@@ -43,7 +43,7 @@ export const resetPassword = async (req: Request, res: Response) => {
         if (!userDetails) {
             throw new Error('Invalid token');
         }
-        if (!(userDetails?.resetPasswordExpires > Date.now())) {
+        if (!(userDetails?.resetPasswordExpires ?? 0 > Date.now())) {
             throw new Error('Token expired');
         }
         const encryptedPassword = await bcrypt.hash(password, 10);

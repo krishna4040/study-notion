@@ -1,5 +1,22 @@
 import { Request, Response } from 'express'
 import Category from '../models/Category'
+import { Types } from 'mongoose';
+interface course {
+    courseName: string;
+    courseDescription: string;
+    instructor: Types.ObjectId;
+    whatYouWillLearn: string;
+    courseContent: Types.ObjectId[];
+    ratingAndReviews: Types.ObjectId[];
+    price: number;
+    thumbnail: string;
+    tag: string[];
+    category: Types.ObjectId;
+    studentsEnrolled: Types.ObjectId[];
+    instructions: string[];
+    status: 'Draft' | 'Published';
+    sold: number
+}
 
 export const createCategory = async (req: Request, res: Response) => {
     try {
@@ -64,7 +81,7 @@ export const categoryPageDetails = async (req: Request, res: Response) => {
         }
 
         // Get top-selling courses across all categories
-        const allCategories = await Category.find({}).populate("courses");
+        const allCategories = await Category.find({}).populate<{ courses: course[] }>("courses");
         const allCourses = allCategories.flatMap(category => category.courses);
         const mostSellingCourses = allCourses.sort((a, b) => b.sold - a.sold).slice(0, 10);
 

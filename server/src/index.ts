@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from 'express'
 import expressFileUpload, { Options } from 'express-fileupload'
-import { JwtPayload } from 'jsonwebtoken';
 require('dotenv').config();
 const app: Application & Options = express();
 

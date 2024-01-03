@@ -14,6 +14,7 @@ interface course {
     studentsEnrolled: Types.ObjectId[];
     instructions: string[];
     status: 'Draft' | 'Published';
+    sold: number
 }
 
 const courseSchema = new Schema<course>({
@@ -53,6 +54,7 @@ const courseSchema = new Schema<course>({
         type: String,
         enum: ['Draft', 'Published'],
     },
+    sold: Number
 });
 
 export default model('Course', courseSchema);
