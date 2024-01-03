@@ -17,4 +17,4 @@ const profileSchema = new mongoose_1.Schema({
         trim: true,
     },
 });
-module.exports = (0, mongoose_1.model)("Profile", profileSchema);
+exports.default = (0, mongoose_1.model)("Profile", profileSchema);

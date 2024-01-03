@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose'
 import { mailSender } from "../utils/mailSender"
-import emailTemplate  "../mail/emailVerificationTemplate"
+import { emailTemplate } from "../mail/emailVerificationTemplate"
 
 interface OTP {
-    email: String,
-    otp: String,
+    email: string,
+    otp: string,
     createdAt: Date
 }
 
@@ -24,7 +24,7 @@ const OTPSchema = new Schema<OTP>({
     }
 });
 
-async function sendVerificationEmail(email: String, otp: String) {
+async function sendVerificationEmail(email: string, otp: string) {
     try {
         await mailSender(email, "Verification Email", emailTemplate(otp));
     } catch (error) {

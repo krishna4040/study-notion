@@ -11,4 +11,4 @@ const courseProgressSchema = new mongoose_1.Schema({
             ref: "SubSection",
         }],
 });
-module.exports = (0, mongoose_1.model)("CourseProgress", courseProgressSchema);
+exports.default = (0, mongoose_1.model)("CourseProgress", courseProgressSchema);

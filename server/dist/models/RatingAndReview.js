@@ -22,5 +22,4 @@ const ratingAndReviewSchema = new mongoose_1.Schema({
         index: true,
     },
 });
-// Export the RatingAndReview model
-module.exports = (0, mongoose_1.model)("RatingAndReview", ratingAndReviewSchema);
+exports.default = (0, mongoose_1.model)("RatingAndReview", ratingAndReviewSchema);

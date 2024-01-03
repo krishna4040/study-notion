@@ -55,4 +55,4 @@ const userSchema = new mongoose_1.Schema({
         }],
 }, { timestamps: true });
 // Export the Mongoose model for the user schema, using the name "user"
-module.exports = (0, mongoose_1.model)("User", userSchema);
+exports.default = (0, mongoose_1.model)("User", userSchema);

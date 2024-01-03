@@ -38,5 +38,6 @@ const courseSchema = new mongoose_1.Schema({
         type: String,
         enum: ['Draft', 'Published'],
     },
+    sold: Number
 });
-module.exports = (0, mongoose_1.model)('Course', courseSchema);
+exports.default = (0, mongoose_1.model)('Course', courseSchema);
