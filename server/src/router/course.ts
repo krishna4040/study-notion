@@ -18,7 +18,7 @@ import { createSubSection, deleteSubSection, updateSubSection } from '../control
 import { createRating, getAllRatingReview, getAverageRating } from '../controllers/ratingAndReview'
 
 // Middlewares
-const { auth, isInstructor, isStudent, isAdmin } = require("../middlewares/auth")
+import { auth, isInstructor, isStudent, isAdmin } from "../middlewares/auth"
 
 // ********************************************************************************************************
 //                                      Course routes
