@@ -6,6 +6,7 @@ import Image, { StaticImageData } from 'next/image'
 import frameImg from "@/assets/Images/frame.png"
 import LoginForm from "./LoginForm"
 import SignupForm from "./SignupForm"
+import { useState } from "react"
 
 interface props {
     title: string;
@@ -19,7 +20,7 @@ interface props {
 function Template({ title, desc1, desc2, instructorimg, studentimg, formType }: props): JSX.Element {
 
     const { loading } = useAppSelector(state => state.auth)
-    const { img } = useAppSelector(state => state.image);
+    const [imgOf, setImgOf] = useState("student");
 
     return (
         <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
@@ -37,7 +38,7 @@ function Template({ title, desc1, desc2, instructorimg, studentimg, formType }: 
                                     {desc2}
                                 </span>
                             </p>
-                            {formType === "signup" ? <SignupForm instructorimg={instructorimg} studentimg={studentimg} /> : <LoginForm instructorimg={instructorimg} studentimg={studentimg} />}
+                            {formType === "signup" ? <SignupForm setImg={setImgOf} /> : <LoginForm setImg={setImgOf} />}
                         </div>
                         <div className="relative mx-auto w-11/12 max-w-[450px] md:mx-0">
                             <Image
@@ -47,14 +48,14 @@ function Template({ title, desc1, desc2, instructorimg, studentimg, formType }: 
                                 height={504}
                                 loading="lazy"
                             />
-                            {/* <Image
-                                src={img!}
+                            <Image
+                                src={imgOf === "student" ? studentimg : instructorimg}
                                 alt="Students"
                                 width={558}
                                 height={504}
                                 loading="lazy"
                                 className="absolute z-10 -top-4 right-4"
-                            /> */}
+                            />
                         </div>
                     </div>
             }

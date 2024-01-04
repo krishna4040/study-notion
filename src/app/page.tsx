@@ -9,13 +9,13 @@ import LearningLanguageSection from '../components/core/Home/LearningLanguageSec
 import InstructorSection from '../components/core/Home/InstructorSection'
 import ExploreMore from '../components/core/Home/ExploreMore'
 import Footer from '../components/common/Footer'
-import User from '../components/core/Home/User'
+import IsLoggedin from '../components/core/Home/isLoogedin'
 
 export default function Home() {
   return (
     <div>
 
-      <User />
+      <IsLoggedin />
 
       {/* Section1 */}
       <div className='relative flex flex-col items-center justify-between w-11/12 mx-auto text-white max-w-maxContent'>

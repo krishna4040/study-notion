@@ -32,7 +32,7 @@ const Navbar = () => {
         try {
             const result = await axios.get(categories.CATEGORIES_API);
             setSubLinks(result?.data?.data);
-        } catch (error) {
+        } catch (error: any) {
             console.log('could not fecth categories list');
         }
     };

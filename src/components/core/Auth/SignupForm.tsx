@@ -8,18 +8,16 @@ import Tab from '../../common/Tab'
 import { sendOtp } from "@/services/opr/auth"
 import { setSignupData } from "@/lib/feature/authSlice"
 import { ACCOUNT_TYPE } from "@/utils/constants"
-import { setImg } from '@/lib/feature/tabToogleSlice'
-import { StaticImageData } from "next/image"
 import { useRouter } from "next/navigation"
 
-function SignupForm({ instructorimg, studentimg }: { instructorimg: StaticImageData, studentimg: StaticImageData }) {
+function SignupForm({ setImg }: { setImg: React.Dispatch<React.SetStateAction<string>> }) {
 
     const dispatch = useAppDispatch();
     const router = useRouter();
     const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT)
 
     useEffect(() => {
-        accountType === "Student" ? dispatch(setImg(studentimg)) : dispatch(setImg(instructorimg));
+        accountType === "Student" ? setImg("student") : setImg("Ins");
     }, [accountType]);
 
     // student or instructor

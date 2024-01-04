@@ -7,16 +7,9 @@ import Link from "next/link"
 import { login } from "@/services/opr/auth"
 import { ACCOUNT_TYPE } from "@/utils/constants"
 import Tab from '@/components/common/Tab'
-import { setImg } from '@/lib/feature/tabToogleSlice'
-import { StaticImageData } from "next/image"
 import { useRouter } from "next/navigation"
 
-interface props {
-    instructorimg: StaticImageData;
-    studentimg: StaticImageData;
-}
-
-function LoginForm({ instructorimg, studentimg }: props) {
+function LoginForm({ setImg }: { setImg: React.Dispatch<React.SetStateAction<string>> }) {
 
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -29,7 +22,7 @@ function LoginForm({ instructorimg, studentimg }: props) {
     const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT);
 
     useEffect(() => {
-        accountType === "Student" ? dispatch(setImg(studentimg)) : dispatch(setImg(instructorimg));
+        accountType === "Student" ? setImg("student") : setImg("Ins");
     }, [accountType]);
 
     const { email, password } = formData;

@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './feature/authSlice'
 import cartReducer from './feature/cartSlice'
 import profileReducer from './feature/profileSlice'
-import tabToogle from './feature/tabToogleSlice'
 import viewCourseReducer from './feature/viewCourseSlice'
 
 export const store = configureStore({
@@ -10,7 +9,6 @@ export const store = configureStore({
         auth: authReducer,
         profile: profileReducer,
         cart: cartReducer,
-        image: tabToogle,
         viewCourse: viewCourseReducer
     },
 })

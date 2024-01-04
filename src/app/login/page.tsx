@@ -1,5 +1,5 @@
-import loginImg from '@/assets/Images/login.webp'
-import instructor from '@/assets/Images/Instructor.png'
+import student from '@/assets/Images/login.webp'
+import instructor from '@/assets/Images/new.svg'
 import Template from '@/components/core/Auth/Template'
 
 export default function Login() {
@@ -10,7 +10,7 @@ export default function Login() {
             desc2="Education to future-proof your carrer."
             formType="login"
             instructorimg={instructor}
-            studentimg={loginImg}
+            studentimg={student}
         />
     )
 }
