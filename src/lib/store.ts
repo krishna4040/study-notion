@@ -1,9 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from './feature/counterSlice'
+import authReducer from './feature/authSlice'
+import cartReducer from './feature/cartSlice'
+import profileReducer from './feature/profileSlice'
+import tabToogle from './feature/tabToogleSlice'
+import viewCourseReducer from './feature/viewCourseSlice'
 
 export const store = configureStore({
     reducer: {
-        counter: counterReducer
+        auth: authReducer,
+        profile: profileReducer,
+        cart: cartReducer,
+        image: tabToogle,
+        viewCourse: viewCourseReducer
     },
 })
 

@@ -5,7 +5,7 @@ interface user {
     lastName: string,
     email: string,
     password: string | undefined,
-    accountType: String,
+    accountType: "Admin" | "Student" | "Instructor",
     active: boolean,
     approved: boolean,
     additionalDetails: Types.ObjectId,
