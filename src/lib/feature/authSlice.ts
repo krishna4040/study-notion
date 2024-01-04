@@ -1,9 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type signupData = {}
+type signupData = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    accountType: string;
+}
 
 interface auth {
-    token: string;
+    token: string | null;
     signupData: signupData | null;
     loading: boolean;
 }
@@ -21,7 +28,7 @@ const authSlice = createSlice({
         setSignupData: (state, action: PayloadAction<signupData>) => {
             state.signupData = action.payload
         },
-        setToken: (state, action: PayloadAction<string>) => {
+        setToken: (state, action: PayloadAction<string | null>) => {
             state.token = action.payload
         },
         setLoading: (state, action: PayloadAction<boolean>) => {

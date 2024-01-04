@@ -1,7 +1,7 @@
 'use client'
 import { FcGoogle } from "react-icons/fc"
 import { useAppSelector } from "@/lib/hooks"
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import frameImg from "@/assets/Images/frame.png"
 import LoginForm from "./LoginForm"
@@ -11,8 +11,8 @@ interface props {
     title: string;
     desc1: string;
     desc2: string;
-    instructorimg: Buffer;
-    studentimg: Buffer;
+    instructorimg: StaticImageData;
+    studentimg: StaticImageData;
     formType: string;
 }
 
@@ -47,7 +47,7 @@ function Template({ title, desc1, desc2, instructorimg, studentimg, formType }: 
                             loading="lazy"
                         />
                         <Image
-                            src={img}
+                            src={img!}
                             alt="Students"
                             width={558}
                             height={504}

@@ -1,5 +1,5 @@
 import loginImg from '@/assets/Images/login.webp'
-import instructor from '@/assets/Images/new.svg'
+import instructor from '@/assets/Images/Instructor.png'
 import Template from '@/components/core/Auth/Template'
 
 export default function Login() {
