@@ -8,7 +8,7 @@ export default function Login() {
             title="Welcome Back"
             desc1="Build skills for today , tommorow , and beyond."
             desc2="Education to future-proof your carrer."
-            formType="login"
+            formType="signup"
             instructorimg={instructor}
             studentimg={loginImg}
         />

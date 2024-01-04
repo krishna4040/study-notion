@@ -9,6 +9,7 @@ import { ACCOUNT_TYPE } from "@/utils/constants"
 import Tab from '@/components/common/Tab'
 import { setImg } from '@/lib/feature/tabToogleSlice'
 import { StaticImageData } from "next/image"
+import { useRouter } from "next/navigation"
 
 interface props {
     instructorimg: StaticImageData;
@@ -17,6 +18,7 @@ interface props {
 
 function LoginForm({ instructorimg, studentimg }: props) {
 
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState({
         email: "",
@@ -27,14 +29,10 @@ function LoginForm({ instructorimg, studentimg }: props) {
     const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT);
 
     useEffect(() => {
-        if (accountType === "Student") {
-            dispatch(setImg(studentimg));
-        } else {
-            dispatch(setImg(instructorimg));
-        }
+        accountType === "Student" ? dispatch(setImg(studentimg)) : dispatch(setImg(instructorimg));
     }, [accountType]);
 
-    const { email, password } = formData
+    const { email, password } = formData;
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData((prevData) => ({
@@ -45,7 +43,11 @@ function LoginForm({ instructorimg, studentimg }: props) {
 
     const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch(login(email, password));
+        login(email, password, router)(dispatch);
+        setFormData({
+            email: "",
+            password: ""
+        });
     }
 
     const tabData = [
@@ -92,9 +94,11 @@ function LoginForm({ instructorimg, studentimg }: props) {
                     placeholder="Enter Password"
                     className="form-style w-full !pr-10"
                 />
-                <span onClick={() => setShowPassword((prev) => !prev)} className="absolute right-3 top-[38px] z-[10] cursor-pointer">
-                    {showPassword ? (<AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />) :
-                        (<AiOutlineEye fontSize={24} fill="#AFB2BF" />)
+                <span onClick={() => setShowPassword(prev => !prev)} className="absolute right-3 top-[38px] z-[10] cursor-pointer">
+                    {
+                        showPassword ?
+                            <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" /> :
+                            <AiOutlineEye fontSize={24} fill="#AFB2BF" />
                     }
                 </span>
                 <Link href="/forgot-password">

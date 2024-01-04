@@ -9,14 +9,14 @@ type signupData = {
     accountType: string;
 }
 
-interface auth {
+interface authState {
     token: string | null;
     signupData: signupData | null;
     loading: boolean;
 }
 
-const initialState: auth = {
-    token: localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')!) : null,
+const initialState: authState = {
+    token: typeof window !== 'undefined' && localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')!) : null,
     signupData: null,
     loading: false,
 }

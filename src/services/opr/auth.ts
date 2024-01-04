@@ -5,13 +5,12 @@ import { resetCart } from "@/lib/feature/cartSlice"
 import { setUser } from "@/lib/feature/profileSlice"
 import { endpoints } from "../api"
 import { AppDispatch } from "@/lib/store"
-import { useRouter } from 'next/router'
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 // Destructuring from endpoints
 const { SENDOTP_API, SIGNUP_API, LOGIN_API, RESETPASSTOKEN_API, RESETPASSWORD_API } = endpoints
-const router = useRouter();
 
-export function sendOtp(email: string) {
+export function sendOtp(email: string, router: AppRouterInstance) {
     return async (dispatch: AppDispatch) => {
         const toastId = toast.loading("Loading...")
         dispatch(setLoading(true))
@@ -38,6 +37,7 @@ export function signUp(
     password: string,
     confirmPassword: string,
     otp: string,
+    router: AppRouterInstance
 ) {
     return async (dispatch: AppDispatch) => {
         const toastId = toast.loading("Loading...")
@@ -58,8 +58,7 @@ export function signUp(
             }
             toast.success("Signup Successful")
             router.push("/login")
-        } catch (error) {
-            console.log("SIGNUP API ERROR............", error)
+        } catch (error: any) {
             toast.error("Signup Failed")
             router.push("/signup")
         }
@@ -68,7 +67,7 @@ export function signUp(
     }
 }
 
-export function login(email: string, password: string) {
+export function login(email: string, password: string, router: AppRouterInstance) {
     return async (dispatch: AppDispatch) => {
         const toastId = toast.loading("Loading...")
         dispatch(setLoading(true))
@@ -117,7 +116,7 @@ export const getPasswordResetToken = (email: string, setEmailSent: Function) => 
     }
 }
 
-export function resetPassword(password: string, confirmPassword: string, token: string) {
+export function resetPassword(password: string, confirmPassword: string, token: string, router: AppRouterInstance) {
     return async (dispatch: AppDispatch) => {
         const toastId = toast.loading("Loading...")
         dispatch(setLoading(true))
@@ -142,7 +141,7 @@ export function resetPassword(password: string, confirmPassword: string, token: 
     }
 }
 
-export function logout() {
+export function logout(router: AppRouterInstance) {
     return (dispatch: AppDispatch) => {
         dispatch(setToken(null))
         dispatch(setUser(null))

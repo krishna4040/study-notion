@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction, Dispatch } from "react";
 import { HiUsers } from "react-icons/hi";
 import { ImTree } from "react-icons/im";
 
@@ -12,7 +12,7 @@ type cardData = {
 interface props {
     cardData: cardData;
     currentCard: string;
-    setCurrentCard: Function;
+    setCurrentCard: Dispatch<SetStateAction<string>>;
 }
 
 const CourseCard: React.FunctionComponent<props> = ({ cardData, currentCard, setCurrentCard }) => {

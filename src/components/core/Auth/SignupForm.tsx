@@ -10,10 +10,12 @@ import { setSignupData } from "@/lib/feature/authSlice"
 import { ACCOUNT_TYPE } from "@/utils/constants"
 import { setImg } from '@/lib/feature/tabToogleSlice'
 import { StaticImageData } from "next/image"
+import { useRouter } from "next/navigation"
 
 function SignupForm({ instructorimg, studentimg }: { instructorimg: StaticImageData, studentimg: StaticImageData }) {
-    const dispatch = useAppDispatch()
 
+    const dispatch = useAppDispatch();
+    const router = useRouter();
     const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT)
 
     useEffect(() => {
@@ -32,11 +34,11 @@ function SignupForm({ instructorimg, studentimg }: { instructorimg: StaticImageD
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    const { firstName, lastName, email, password, confirmPassword } = formData
+    const { firstName, lastName, email, password, confirmPassword } = formData;
 
     // Handle input fields, when some value changes
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setFormData((prevData) => ({
+        setFormData(prevData => ({
             ...prevData,
             [e.target.name]: e.target.value,
         }))
@@ -57,8 +59,8 @@ function SignupForm({ instructorimg, studentimg }: { instructorimg: StaticImageD
         // Setting signup data to state
         // To be used after otp verification
         // Send OTP to user for verification
-        dispatch(setSignupData(signupData))
-        dispatch(sendOtp(formData.email));
+        dispatch(setSignupData(signupData));
+        sendOtp(formData.email, router)(dispatch)
 
         // Reset
         setFormData({
@@ -146,14 +148,14 @@ function SignupForm({ instructorimg, studentimg }: { instructorimg: StaticImageD
                             className="form-style w-full !pr-10"
                         />
                         <span
-                            onClick={() => setShowPassword((prev) => !prev)}
+                            onClick={() => setShowPassword(prev => !prev)}
                             className="absolute right-3 top-[38px] z-[10] cursor-pointer"
                         >
-                            {showPassword ? (
-                                <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-                            ) : (
-                                <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-                            )}
+                            {
+                                showPassword ?
+                                    <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" /> :
+                                    <AiOutlineEye fontSize={24} fill="#AFB2BF" />
+                            }
                         </span>
                     </label>
                     <label className="relative">
@@ -169,14 +171,14 @@ function SignupForm({ instructorimg, studentimg }: { instructorimg: StaticImageD
                             className="form-style w-full !pr-10"
                         />
                         <span
-                            onClick={() => setShowConfirmPassword((prev) => !prev)}
+                            onClick={() => setShowConfirmPassword(prev => !prev)}
                             className="absolute right-3 top-[38px] z-[10] cursor-pointer"
                         >
-                            {showConfirmPassword ? (
-                                <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-                            ) : (
-                                <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-                            )}
+                            {
+                                showConfirmPassword ?
+                                    <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" /> :
+                                    <AiOutlineEye fontSize={24} fill="#AFB2BF" />
+                            }
                         </span>
                     </label>
                 </div>

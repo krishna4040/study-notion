@@ -7,7 +7,7 @@ type tabData = {
 interface props {
     tabData: Array<tabData>;
     field: string;
-    setField: Function
+    setField: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function Tab({ tabData, field, setField }: props) {

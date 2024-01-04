@@ -41,7 +41,7 @@ const Navbar = () => {
     }, [])
 
     return (
-        <div className={`flex items-center justify-center h-14 border-b-[1px] border-b-richblack-700 bg-richblack-900 ${location.pathname.indexOf('dashboard') !== -1 ? 'fixed top-0 left-0 right-0 z-30' : ''}`}>
+        <div className={`flex items-center justify-center h-14 border-b-[1px] border-b-richblack-700 bg-richblack-900 ${pathname.indexOf('dashboard') !== -1 ? 'fixed top-0 left-0 right-0 z-30' : ''}`}>
 
             <div className='flex items-center justify-between w-11/12 mx-auto max-w-maxContent'>
 
@@ -87,21 +87,16 @@ const Navbar = () => {
 
                 {/* Login/signup/dashboard/logout/cart/search/dp */}
                 <div className='flex items-center justify-center gap-3'>
-
                     {
                         user && user?.accountType != 'Instructor' &&
-                        (
-                            <Link href='/dashboard/cart' className='relative'>
-                                <AiOutlineShoppingCart className='text-[#999DAA] text-lg' />
-                                {totalItems > 0 && <span>{totalItems}</span>}
-                            </Link>
-                        )
+                        <Link href='/dashboard/cart' className='relative'>
+                            <AiOutlineShoppingCart className='text-[#999DAA] text-lg' />
+                            {totalItems > 0 && <span>{totalItems}</span>}
+                        </Link>
                     }
-
                     {token === null && <Link href='/login'><button className='px-3 py-2 border rounded-md border-richblack-700 bg-richblack-800 text-richblack-100'>Login</button></Link>}
                     {token === null && <Link href='/signup'><button className='px-3 py-2 border rounded-md border-richblack-700 bg-richblack-800 text-richblack-100'>Sign Up</button></Link>}
                     {/* {token !== null && <ProfileDropDown />} */}
-
                 </div>
 
             </div>
