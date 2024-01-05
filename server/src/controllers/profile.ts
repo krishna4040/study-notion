@@ -2,6 +2,11 @@ import { Request, Response } from 'express'
 import Profile from "../models/Profile.js";
 import User from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+import { course } from '../models/Course.js';
+import { section } from '../models/Section.js';
+import { convertSecondsToDuration } from '../utils/secToDuration.js'
+import CourseProgress from '../models/CourseProgress.js';
+import { subSection } from '../models/SubSection.js';
 require('dotenv').config();
 
 export const updateProfile = async (req: Request, res: Response) => {
@@ -96,20 +101,51 @@ export const updateDisplayPicture = async (req: Request, res: Response) => {
 // getEnrolledCourses
 export const getEnrolledCourses = async (req: Request, res: Response) => {
     try {
-        const id = req.user?.id;
-        if (!id) {
-            throw new Error('Invalid request');
+        const userId = req.user?.id;
+        const userDetails = await User.findOne({ _id: userId, })
+            .populate<{ courses: course[] }>({
+                path: "courses",
+                populate: {
+                    path: "courseContent",
+                    populate: "subSection"
+                }
+            })
+            .exec();
+
+        const enrolledCourses: course[] = userDetails?.courses!;
+        for (let i = 0; i < enrolledCourses.length; i++) {
+
+            let totalDurationInSeconds = 0, SubsectionLength = 0;
+            const courseContent: any = enrolledCourses[i].courseContent; // coursecontent is a Array<section> objectid
+
+            for (let j = 0; j < courseContent.length; j++) {
+                const section: section = courseContent[j];
+                totalDurationInSeconds += section.subSection.reduce((acc: number, curr: subSection) => acc + parseInt(curr.timeDuration!), 0)
+                enrolledCourses[i].totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+                SubsectionLength += courseContent[j].subSection.length
+            }
+
+            const courseProgressCount = await CourseProgress.findOne({
+                courseID: enrolledCourses[i]._id,
+                userId: userId,
+            });
+            const completedVideos = courseProgressCount?.completedVideos.length; // completed subsections
+
+            if (SubsectionLength === 0) {
+                enrolledCourses[i].progressPercentage = 100;
+            } else {
+                const multiplier = Math.pow(10, 2);
+                enrolledCourses[i].progressPercentage = Math.round((completedVideos! / SubsectionLength) * 100 * multiplier) / multiplier
+            }
         }
-        const user = await User.findById(id).populate("courses").exec();
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: 'enrolled courses fecth successfull',
-            data: user?.courses
-        });
+            data: userDetails?.courses,
+        })
     } catch (error: any) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
-            message: error.message
-        });
+            message: error.message,
+        })
     }
 }

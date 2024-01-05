@@ -37,7 +37,7 @@ export const capturePayment = async (req: Request, res: Response) => {
     // create order using razorpay instance.orders.create
     try {
         const paymentResponse = await instance.orders.create({
-            amount: course.price * 100,
+            amount: course.price! * 100,
             currency: 'INR',
             receipt: Math.random().toString(),
             notes: {
@@ -92,7 +92,7 @@ export const verifySignature = async (req: Request, res: Response) => {
             await Course.findByIdAndUpdate(courseId, { $inc: { sold: 1 } });
 
             //mail send krdo confirmation wala
-            const emailResponse = await mailSender(enrolledStudent?.email!, "Congratulations from CodeHelp", courseEnrollmentEmail(enrolledCourse.courseName, enrolledStudent?.firstName!));
+            const emailResponse = await mailSender(enrolledStudent?.email!, "Congratulations from CodeHelp", courseEnrollmentEmail(enrolledCourse?.courseName!, enrolledStudent?.firstName!));
 
             return res.status(200).json({
                 success: true,

@@ -1,14 +1,11 @@
-import { Schema, model } from 'mongoose'
+import { InferSchemaType, Schema, model } from 'mongoose'
 import { mailSender } from "../utils/mailSender"
 import { emailTemplate } from "../mail/emailVerificationTemplate"
 
-interface OTP {
-    email: string,
-    otp: string,
-    createdAt: Date
-}
+export type OTP = InferSchemaType<typeof OTPSchema>
 
-const OTPSchema = new Schema<OTP>({
+const OTPSchema = new Schema({
+    _id: Schema.Types.ObjectId,
     email: {
         type: String,
         required: true,
