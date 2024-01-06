@@ -1,9 +1,14 @@
-import { InferSchemaType, Schema, model } from 'mongoose'
+import { Schema, Types, model } from 'mongoose'
 
-export type subSection = InferSchemaType<typeof SubSectionSchema>
+export type subSection = {
+    _id: Types.ObjectId;
+    title: string;
+    timeDuration: string;
+    description: string;
+    videoUrl: string;
+}
 
-const SubSectionSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const SubSectionSchema = new Schema<subSection>({
     title: String,
     timeDuration: String,
     description: String,

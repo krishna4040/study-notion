@@ -1,9 +1,12 @@
-import { InferSchemaType, Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
-export type scourseProgress = InferSchemaType<typeof courseProgressSchema>
+export type courseProgress = {
+    _id: Types.ObjectId;
+    courseID: Types.ObjectId;
+    completedVideos: Types.ObjectId[];
+}
 
-const courseProgressSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const courseProgressSchema = new Schema<courseProgress>({
     courseID: {
         type: Schema.Types.ObjectId,
         ref: "Course",

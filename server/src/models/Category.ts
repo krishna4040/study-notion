@@ -1,9 +1,13 @@
-import { InferSchemaType, Schema, model } from 'mongoose'
+import { Schema, Types, model } from 'mongoose'
 
-export type category = InferSchemaType<typeof categorySchema>
+export type category = {
+    _id: Types.ObjectId;
+    name: string;
+    description: string;
+    courses: Types.ObjectId[];
+}
 
-const categorySchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const categorySchema = new Schema<category>({
     name: {
         type: String,
         required: true,

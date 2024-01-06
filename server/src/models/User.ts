@@ -1,9 +1,25 @@
-import { Schema, model, InferSchemaType } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 
-export type user = InferSchemaType<typeof userSchema>
+export type user = {
+    _id: Types.ObjectId;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    accountType: 'Admin' | 'Student' | 'Instructor';
+    active?: boolean;
+    approved?: boolean;
+    additionalDetails: Types.ObjectId;
+    courses?: Types.ObjectId[];
+    token?: string;
+    resetPasswordExpires?: Date;
+    image: string;
+    courseProgress?: Types.ObjectId[];
+    createdAt: Date;
+    updatedAt: Date;
+}
 
 const userSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     firstName: {
         type: String,
         required: true,

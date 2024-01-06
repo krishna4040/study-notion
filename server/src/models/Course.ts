@@ -1,9 +1,26 @@
-import { InferSchemaType, Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 
-export type course = InferSchemaType<typeof courseSchema>
+export type course = {
+    _id: Types.ObjectId;
+    courseName: string;
+    courseDescription: string;
+    instructor: Types.ObjectId;
+    whatYouWillLearn: string;
+    courseContent: Types.ObjectId[];
+    ratingAndReviews: Types.ObjectId[];
+    price: number;
+    thumbnail: string;
+    tag: string[];
+    category: Types.ObjectId;
+    studentsEnrolled: Types.ObjectId[];
+    instructions: string[];
+    status: 'Draft' | 'Published';
+    sold: number;
+    totalDuration: string;
+    progressPercentage: number;
+}
 
-const courseSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const courseSchema = new Schema<course>({
     courseName: String,
     courseDescription: String,
     instructor: {

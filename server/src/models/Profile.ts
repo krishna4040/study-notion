@@ -1,9 +1,15 @@
-import { InferSchemaType, Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-export type profile = InferSchemaType<typeof profileSchema>
+export type profile = {
+    _id: Schema.Types.ObjectId;
+    gender?: string;
+    dateOfBirth?: string;
+    about?: string;
+    contactNumber?: number;
+}
 
-const profileSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+
+const profileSchema = new Schema<profile>({
     gender: {
         type: String,
     },

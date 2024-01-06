@@ -1,9 +1,12 @@
-import { Schema, model, InferSchemaType } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 
-export type section = InferSchemaType<typeof sectionSchema>
+export type section = {
+    _id: Types.ObjectId;
+    sectionName: string;
+    subSection: Types.ObjectId[];
+}
 
-const sectionSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const sectionSchema = new Schema<section>({
     sectionName: {
         type: String,
     },

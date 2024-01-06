@@ -1,9 +1,14 @@
-import { InferSchemaType, Schema, model } from 'mongoose'
+import { Types, Schema, model } from 'mongoose'
 
-export type ratingAndReview = InferSchemaType<typeof ratingAndReviewSchema>
+export type ratingAndReview = {
+    _id: Types.ObjectId;
+    user: Types.ObjectId;
+    rating: number;
+    review: string;
+    course: Types.ObjectId;
+}
 
-const ratingAndReviewSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const ratingAndReviewSchema = new Schema<ratingAndReview>({
     user: {
         type: Schema.Types.ObjectId,
         required: true,
