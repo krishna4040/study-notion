@@ -23,6 +23,7 @@ export function sendOtp(email: string, router: AppRouterInstance) {
             router.push("/verify-email")
         } catch (error: any) {
             toast.error("Could Not Send OTP")
+            console.log(error);
         }
         dispatch(setLoading(false))
         toast.dismiss(toastId)

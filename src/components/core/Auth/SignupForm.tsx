@@ -58,7 +58,7 @@ function SignupForm({ setImg }: { setImg: React.Dispatch<React.SetStateAction<st
         // To be used after otp verification
         // Send OTP to user for verification
         dispatch(setSignupData(signupData));
-        sendOtp(formData.email, router)(dispatch)
+        sendOtp(formData.email, router)(dispatch);
 
         // Reset
         setFormData({
