@@ -36,7 +36,7 @@ function LoginForm({ setImg }: { setImg: React.Dispatch<React.SetStateAction<str
 
     const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        login(email, password, router)(dispatch);
+        dispatch(login(email, password, router));
         setFormData({
             email: "",
             password: ""

@@ -9,9 +9,9 @@ interface cartState {
 }
 
 const initialState: cartState = {
-    cart: typeof window !== 'undefined' && localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")!) : [],
-    total: typeof window !== 'undefined' && localStorage.getItem("total") ? JSON.parse(localStorage.getItem("total")!) : 0,
-    totalItems: typeof window !== 'undefined' && localStorage.getItem("totalItems") ? JSON.parse(localStorage.getItem("totalItems")!) : 0
+    cart: [],
+    total: 0,
+    totalItems: 0
 }
 
 const cartSlice = createSlice({

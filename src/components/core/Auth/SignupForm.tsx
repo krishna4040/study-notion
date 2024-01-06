@@ -58,7 +58,7 @@ function SignupForm({ setImg }: { setImg: React.Dispatch<React.SetStateAction<st
         // To be used after otp verification
         // Send OTP to user for verification
         dispatch(setSignupData(signupData));
-        sendOtp(formData.email, router)(dispatch);
+        dispatch(sendOtp(formData.email, router));
 
         // Reset
         setFormData({
@@ -68,7 +68,7 @@ function SignupForm({ setImg }: { setImg: React.Dispatch<React.SetStateAction<st
             password: "",
             confirmPassword: "",
         })
-        setAccountType(ACCOUNT_TYPE.STUDENT)
+        setAccountType(ACCOUNT_TYPE.STUDENT);
     }
 
     // data to pass to Tab component

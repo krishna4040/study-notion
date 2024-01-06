@@ -15,7 +15,7 @@ const Details = () => {
             {
                 detailsarr.map((element, index) => {
                     return (
-                        <div>
+                        <div key={index}>
                             <div className='relative flex flex-col gap-2 mx-auto w-[300px]' key={index}>
                                 <h2 className='text-lg text-[#F1F2FF] font-inter font-semibold'>{element.title}</h2>
                                 <p className=' text-sm text-[#999DAA] font-inter font-medium'>{element.desc1}</p>

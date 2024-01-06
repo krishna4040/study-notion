@@ -8,11 +8,11 @@ import { usePathname } from 'next/navigation'
 import { useAppSelector } from '@/lib/hooks'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
 import { IoIosArrowDropdownCircle } from 'react-icons/io'
-// import ProfileDropDown from '../core/Auth/ProfileDropDown'
+import ProfileDropDown from '../core/Auth/ProfileDropDown'
 import { categories } from '@/services/api'
 import axios from 'axios'
 import { category } from '@/lib/types'
-// import HamburgerMenu from '../core/Dashboard/Hamburger'
+import HamburgerMenu from '../core/Dashboard/HamburgerMenu'
 
 const Navbar = () => {
 
@@ -38,14 +38,14 @@ const Navbar = () => {
     };
     useEffect(() => {
         fecthSubLinks();
-    }, [])
+    }, []);
 
     return (
         <div className={`flex items-center justify-center h-14 border-b-[1px] border-b-richblack-700 bg-richblack-900 ${pathname.indexOf('dashboard') !== -1 ? 'fixed top-0 left-0 right-0 z-30' : ''}`}>
 
             <div className='flex items-center justify-between w-11/12 mx-auto max-w-maxContent'>
 
-                {/* {token !== null && <div className='block lg:hidden'><HamburgerMenu /></div>} */}
+                {token !== null && <div className='block lg:hidden'><HamburgerMenu /></div>}
 
                 {/* Logo */}
                 <Link href={'/'}>
@@ -88,7 +88,7 @@ const Navbar = () => {
                 {/* Login/signup/dashboard/logout/cart/search/dp */}
                 <div className='flex items-center justify-center gap-3'>
                     {
-                        user && user?.accountType != 'Instructor' &&
+                        token && user && user?.accountType != 'Instructor' &&
                         <Link href='/dashboard/cart' className='relative'>
                             <AiOutlineShoppingCart className='text-[#999DAA] text-lg' />
                             {totalItems > 0 && <span>{totalItems}</span>}
@@ -96,7 +96,7 @@ const Navbar = () => {
                     }
                     {token === null && <Link href='/login'><button className='px-3 py-2 border rounded-md border-richblack-700 bg-richblack-800 text-richblack-100'>Login</button></Link>}
                     {token === null && <Link href='/signup'><button className='px-3 py-2 border rounded-md border-richblack-700 bg-richblack-800 text-richblack-100'>Sign Up</button></Link>}
-                    {/* {token !== null && <ProfileDropDown />} */}
+                    {token !== null && <ProfileDropDown />}
                 </div>
 
             </div>

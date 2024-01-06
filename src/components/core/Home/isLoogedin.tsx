@@ -4,19 +4,19 @@ import { useAppDispatch } from '@/lib/hooks'
 import { getUserDetails } from '@/services/opr/profile'
 import { useRouter } from 'next/navigation';
 
-const User = (): null => {
+const User = () => {
 
     const dispacth = useAppDispatch();
     const router = useRouter();
 
     useEffect(() => {
-        if (localStorage.getItem("token")) {
-            const token = JSON.parse(localStorage.getItem("token")!)
-            getUserDetails(token, router)(dispacth)
+        if (typeof localStorage.getItem("token") === 'string') {
+            const token = JSON.parse(localStorage.getItem("token")!);
+            dispacth(getUserDetails(token, router));
         }
     }, []);
 
-    return null;
+    return <div></div>;
 }
 
 export default User

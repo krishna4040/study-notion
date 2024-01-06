@@ -60,7 +60,6 @@ export function signUp(
             toast.success("Signup Successful")
             router.push("/login")
         } catch (error: any) {
-            console.log(error);
             toast.error("Signup Failed")
             router.push("/signup")
         }
@@ -74,26 +73,31 @@ export function login(email: string, password: string, router: AppRouterInstance
         const toastId = toast.loading("Loading...")
         dispatch(setLoading(true))
         try {
-            const response = await axios.post(LOGIN_API, {
+            const { data } = await axios.post(LOGIN_API, {
                 email,
                 password
             });
 
-            if (!response.data.success) {
-                throw new Error(response.data.message)
+            if (!data.success) {
+                throw new Error(data.message)
             }
 
             toast.success("Login Successful")
-            dispatch(setToken(response.data.token))
-            const userImage = response.data?.user?.image
-                ? response.data.user.image
-                : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.user.firstName} ${response.data.user.lastName}`
-            dispatch(setUser({ ...response.data.user, image: userImage }));
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-            localStorage.setItem("token", JSON.stringify(response.data.token))
+            dispatch(setToken(data.data.token))
+            const userImage = data?.data?.image
+                ? data.data.image
+                : `https://api.dicebear.com/5.x/initials/svg?seed=${data.data.firstName} ${data.data.lastName}`
+            const user = {
+                ...data.data,
+                image: userImage
+            }
+            dispatch(setUser(user));
+            // localStorage.setItem("user", JSON.stringify(data.data));
+            // localStorage.setItem("token", JSON.stringify(data.data.token));
             router.push("/dashboard/my-profile");
         } catch (error: any) {
             toast.error("Login Failed")
+            console.log(error);
         }
         dispatch(setLoading(false))
         toast.dismiss(toastId)

@@ -1,5 +1,5 @@
 'use client'
-import { FcGoogle } from "react-icons/fc"
+// import { FcGoogle } from "react-icons/fc"
 import { useAppSelector } from "@/lib/hooks"
 import Image, { StaticImageData } from 'next/image'
 
@@ -46,7 +46,7 @@ function Template({ title, desc1, desc2, instructorimg, studentimg, formType }: 
                                 alt="Pattern"
                                 width={558}
                                 height={504}
-                                loading="lazy"
+                                priority
                             />
                             <Image
                                 src={imgOf === "student" ? studentimg : instructorimg}

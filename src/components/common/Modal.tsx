@@ -1,4 +1,4 @@
-export interface modalData {
+export type modalData = {
     text1?: string;
     text2?: string;
     btn1Handler?: () => void;

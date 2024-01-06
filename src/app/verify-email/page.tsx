@@ -10,14 +10,14 @@ import { sendOtp, signUp } from '@/services/opr/auth'
 const VerifyEmail = () => {
 
     const [otp, setOtp] = useState("");
-    const { loading, signupData } = useAppSelector((state) => state.auth);
+    const { loading, signupData } = useAppSelector(state => state.auth);
     const dispacth = useAppDispatch();
     const router = useRouter();
 
     const submitHandler = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const { accountType, firstName, lastName, email, password, confirmPassword } = signupData!;
-        dispacth(signUp(accountType, firstName, lastName, email, password, confirmPassword, otp));
+        dispacth(signUp(accountType, firstName, lastName, email, password, confirmPassword, otp, router));
     }
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const VerifyEmail = () => {
                                 </div>
                             </Link>
 
-                            <button onClick={() => { dispacth(sendOtp(signupData?.email!)) }} className='flex items-center justify-center gap-2'>
+                            <button onClick={() => { dispacth(sendOtp(signupData?.email!, router)) }} className='flex items-center justify-center gap-2'>
                                 <p className='text-[#47A5C5]'>Reset it</p>
                             </button>
 

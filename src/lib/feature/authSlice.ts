@@ -16,7 +16,7 @@ interface authState {
 }
 
 const initialState: authState = {
-    token: typeof window !== 'undefined' && localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')!) : null,
+    token: null,
     signupData: null,
     loading: false,
 }

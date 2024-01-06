@@ -99,8 +99,7 @@ export const login = async (req: Request, res: Response) => {
             };
             res.cookie("token", token, options).status(200).json({
                 success: true,
-                token,
-                user,
+                data: user,
                 message: 'User Login Success',
             });
         } else {

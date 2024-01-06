@@ -7,7 +7,7 @@ interface profileState {
 }
 
 const initialState: profileState = {
-    user: typeof window !== 'undefined' && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
+    user: null,
     loading: false
 }
 

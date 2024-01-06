@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dicebear/collection": "^5.3.5",
+    "@dicebear/core": "^5.3.5",
     "@hookform/devtools": "^4.3.1",
     "@ramonak/react-progress-bar": "^5.2.0",
     "@reduxjs/toolkit": "^2.0.1",

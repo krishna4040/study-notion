@@ -22,7 +22,6 @@ export function getUserDetails(token: string, router: AppRouterInstance) {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log("GET_USER_DETAILS API RESPONSE............", response)
 
             if (!response.data.success) {
                 throw new Error(response.data.message)
