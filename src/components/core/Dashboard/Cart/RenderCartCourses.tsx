@@ -1,8 +1,8 @@
 'use client'
 import React from 'react'
 import { useAppSelector, useAppDispatch } from '@/lib/hooks'
-import ReactStars from 'react-rating-stars-component'
-import { AiOutlineStar, AiFillStar } from 'react-icons/ai'
+// import ReactStars from 'react-rating-stars-component'
+// import { AiOutlineStar, AiFillStar } from 'react-icons/ai'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { removeFromCart } from '@/lib/feature/cartSlice'
 import Image from 'next/image'
@@ -30,7 +30,7 @@ const RenderCartCourses = () => {
                                     <p>{course.category.name}</p>
                                     <div>
                                         <span>4.5</span>
-                                        <ReactStars count={5} size={20} edit={false} activeColor={'#ffd700'} emptyIcon={<AiOutlineStar />} filledIcon={<AiFillStar />} />
+                                        {/* <ReactStars count={5} size={20} edit={false} activeColor={'#ffd700'} emptyIcon={<AiOutlineStar />} filledIcon={<AiFillStar />} /> */}
                                         <span>{course.ratingAndReviews.length} Ratings</span>
                                     </div>
                                 </div>

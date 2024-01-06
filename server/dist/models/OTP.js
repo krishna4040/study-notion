@@ -13,7 +13,6 @@ const mongoose_1 = require("mongoose");
 const mailSender_1 = require("../utils/mailSender");
 const emailVerificationTemplate_1 = require("../mail/emailVerificationTemplate");
 const OTPSchema = new mongoose_1.Schema({
-    _id: mongoose_1.Schema.Types.ObjectId,
     email: {
         type: String,
         required: true,

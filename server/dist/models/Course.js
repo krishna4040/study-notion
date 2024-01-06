@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const courseSchema = new mongoose_1.Schema({
-    _id: mongoose_1.Schema.Types.ObjectId,
     courseName: String,
     courseDescription: String,
     instructor: {

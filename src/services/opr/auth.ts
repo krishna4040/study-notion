@@ -60,6 +60,7 @@ export function signUp(
             toast.success("Signup Successful")
             router.push("/login")
         } catch (error: any) {
+            console.log(error);
             toast.error("Signup Failed")
             router.push("/signup")
         }
