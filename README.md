@@ -1,6 +1,6 @@
 # Study-Notion
 
-Welcome to our **Edtech Platform** Study-Notion! This application is designed to offer online courses with a beautiduil user interface and experience.
+Welcome to our **Edtech Platform** Study-Notion! This application is designed to offer online courses with a beautiful user interface and experience.
 
 
 ## Tech Stack
@@ -9,6 +9,7 @@ Welcome to our **Edtech Platform** Study-Notion! This application is designed to
 ![HTML](https://img.shields.io/badge/HTML5-E34F26.svg?style=for-the-badge&logo=HTML5&logoColor=white)
 ![tailwind](https://img.shields.io/badge/Tailwind%20CSS-06B6D4.svg?style=for-the-badge&logo=Tailwind-CSS&logoColor=white)
 ![typescript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
+![next](https://img.shields.io/badge/Next.js-000000.svg?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![react](https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black)
 ![redux](https://img.shields.io/badge/Redux-764ABC.svg?style=for-the-badge&logo=Redux&logoColor=white)
 ![react-form](https://img.shields.io/badge/React%20Hook%20Form-EC5990.svg?style=for-the-badge&logo=React-Hook-Form&logoColor=white)
