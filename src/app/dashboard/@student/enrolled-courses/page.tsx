@@ -4,13 +4,13 @@ import { useAppSelector } from '@/lib/hooks'
 import { getUserEnrolledCourses } from '@/services/opr/profile'
 import ProgressBar from '@ramonak/react-progress-bar';
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import { course, enrolledCourse } from '@/lib/types';
+import { course } from '@/lib/types';
 import Image from 'next/image'
 
 const EnrolledCourses = () => {
 
     const { token } = useAppSelector(state => state.auth);
-    const [enrolledCourses, setEnrolledCourses] = useState<Array<enrolledCourse>>([]);
+    const [enrolledCourses, setEnrolledCourses] = useState<Array<course>>([]);
 
     const getEnrolledCourses = async () => {
         try {
@@ -55,7 +55,7 @@ const EnrolledCourses = () => {
                                             </td>
 
                                             <td>
-                                                {/* <p className='text-[#838894] p-4'>{course.totalDuration || "2hrs 30min"}</p> */}
+                                                <p className='text-[#838894] p-4'>{course.totalDuration || "2hrs 30min"}</p>
                                             </td>
 
                                             <td>

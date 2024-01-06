@@ -13,7 +13,9 @@ export interface course {
     studentsEnrolled: user[];
     instructions: string[];
     status: 'Draft' | 'Published';
-    sold: number
+    sold: number,
+    totalDuration: string,
+    progressPercentage: number
 }
 
 export interface category {
