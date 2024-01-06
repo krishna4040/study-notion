@@ -1,11 +1,13 @@
 import { Request, Response } from 'express'
 import { UploadedFile } from 'express-fileupload'
-import Course from "../models/Course"
+import Course, { course } from "../models/Course"
 import Category from "../models/Category"
 import User from "../models/User"
-// const Section = require('../models/Section');
-// const Section = require('../models/SubSection');
 import { uploadImageToCloudinary } from "../utils/imageUploader"
+import Section, { section } from '../models/Section'
+import SubSection from '../models/SubSection'
+import CourseProgress from '../models/CourseProgress'
+import { convertSecondsToDuration } from '../utils/secToDuration'
 require('dotenv').config();
 
 // Function to create a new course
@@ -109,7 +111,8 @@ export const getAllCourses = async (req: Request, res: Response) => {
 export const getCourseDetails = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.params;
-        const course = await Course.find({ _id: courseId })
+        const userId = req.user?.id;
+        const course = await Course.findOne({ _id: courseId })
             .populate({
                 path: "instructor",
                 populate: {
@@ -118,7 +121,7 @@ export const getCourseDetails = async (req: Request, res: Response) => {
             })
             .populate('category')
             .populate('ratingAndReviews')
-            .populate({
+            .populate<{ courseContent: section[] }>({
                 path: "courseContent",
                 populate: {
                     path: "subSection"
@@ -128,15 +131,34 @@ export const getCourseDetails = async (req: Request, res: Response) => {
         if (!course) {
             throw new Error('Course not found');
         }
+
+        let courseProgressCount = await CourseProgress.findOne({
+            courseID: courseId,
+            userId: userId,
+        });
+
+        let totalDurationInSeconds = 0;
+        course.courseContent.forEach(content => {
+            content.subSection.forEach((subSection: any) => {
+                const timeDurationInSeconds = parseInt(subSection.timeDuration);
+                totalDurationInSeconds += timeDurationInSeconds;
+            });
+        });
+        const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+
         res.status(200).json({
             success: true,
-            message: 'fecthed all courses',
-            course
+            message: 'Course details fecthed succesfully',
+            data: {
+                course,
+                totalDuration,
+                completedVideos: courseProgressCount?.completedVideos ? courseProgressCount?.completedVideos : []
+            }
         });
-    } catch (error) {
+    } catch (error: any) {
         res.status(500).json({
             success: false,
-            message: 'smth went wrong while fecthing all courses'
+            message: error.messgae
         });
     }
 }
@@ -159,123 +181,100 @@ export const getInstructorCourses = async (req: Request, res: Response) => {
     }
 }
 
-// Edit Course Details
-// exports.editCourse = async (req, res) => {
-// 	try {
-// 		const { courseId } = req.body
-// 		const updates = req.body
-// 		const course = await Course.findById(courseId)
+export const editCourse = async (req: Request, res: Response) => {
+    try {
+        const { courseId } = req.body;
+        const updates = req.body;
+        const course = await Course.findById(courseId);
 
-// 		if (!course) {
-// 			return res.status(404).json({ error: "Course not found" })
-// 		}
+        if (!course) {
+            throw new Error('course not found');
+        }
 
-// 		// If Thumbnail Image is found, update it
-// 		if (req.files) {
-// 			console.log("thumbnail update")
-// 			const thumbnail = req.files.thumbnailImage
-// 			const thumbnailImage = await uploadImageToCloudinary(
-// 				thumbnail,
-// 				process.env.FOLDER_NAME
-// 			)
-// 			course.thumbnail = thumbnailImage.secure_url
-// 		}
+        if (req.files) {
+            const thumbnail = req.files.thumbnailImage;
+            const thumbnailImage = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME!);
+            course.thumbnail = thumbnailImage.secure_url;
+        }
 
-// 		// Update only the fields that are present in the request body
-// 		for (const key in updates) {
-// 			if (updates.hasOwnProperty(key)) {
-// 				if (key === "tag" || key === "instructions") {
-// 					course[key] = JSON.parse(updates[key])
-// 				} else {
-// 					course[key] = updates[key]
-// 				}
-// 			}
-// 		}
+        for (const key in updates) {
+            if (updates.hasOwnProperty(key)) {
+                if (key === "tag" || key === "instructions") {
+                    course[key] = JSON.parse(updates[key])
+                } else {
+                    course[key] = updates[key]
+                }
+            }
+        }
+        await course.save()
 
-// 		await course.save()
+        const updatedCourse = await Course.findOne({
+            _id: courseId,
+        })
+            .populate({
+                path: "instructor",
+                populate: {
+                    path: "additionalDetails",
+                },
+            })
+            .populate("category")
+            .populate("ratingAndReviews")
+            .populate({
+                path: "courseContent",
+                populate: "subSection"
+            })
+            .exec()
 
-// 		const updatedCourse = await Course.findOne({
-// 			_id: courseId,
-// 		})
-// 			.populate({
-// 				path: "instructor",
-// 				populate: {
-// 					path: "additionalDetails",
-// 				},
-// 			})
-// 			.populate("category")
-// 			.populate("ratingAndReviews")
-// 			.populate({
-// 				path: "courseContent",
-// 				populate: {
-// 					path: "subSection",
-// 				},
-// 			})
-// 			.exec()
+        res.json({
+            success: true,
+            message: "Course updated successfully",
+            data: updatedCourse
+        })
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        })
+    }
+}
 
-// 		res.json({
-// 			success: true,
-// 			message: "Course updated successfully",
-// 			data: updatedCourse,
-// 		})
-// 	} catch (error) {
-// 		console.error(error)
-// 		res.status(500).json({
-// 			success: false,
-// 			message: "Internal server error",
-// 			error: error.message,
-// 		})
-// 	}
-// }
+export const deleteCourse = async (req: Request, res: Response) => {
+    try {
+        const { courseId } = req.body;
+        const course = await Course.findById(courseId)
+        if (!course) {
+            throw new Error('course not found');
+        }
 
-// // Delete the Course
-// exports.deleteCourse = async (req, res) => {
-// 	try {
-// 		const { courseId } = req.body
+        // Unenroll students from the course
+        const studentsEnrolled = course.studentsEnrolled;
+        for (const studentId of studentsEnrolled) {
+            await User.findByIdAndUpdate(studentId, { $pull: { courses: courseId } });
+        }
 
-// 		// Find the course
-// 		const course = await Course.findById(courseId)
-// 		if (!course) {
-// 			return res.status(404).json({ message: "Course not found" })
-// 		}
+        // Delete sections and sub-sections
+        const courseSections = course.courseContent;
+        for (const sectionId of courseSections) {
+            const section = await Section.findById(sectionId)
+            if (section) {
+                const subSections = section.subSection
+                for (const subSectionId of subSections) {
+                    await SubSection.findByIdAndDelete(subSectionId);
+                }
+            }
+            await Section.findByIdAndDelete(sectionId)
+        }
 
-// 		// Unenroll students from the course
-// 		const studentsEnrolled = course.studentsEnroled
-// 		for (const studentId of studentsEnrolled) {
-// 			await User.findByIdAndUpdate(studentId, {
-// 				$pull: { courses: courseId },
-// 			})
-// 		}
-
-// 		// Delete sections and sub-sections
-// 		const courseSections = course.courseContent
-// 		for (const sectionId of courseSections) {
-// 			// Delete sub-sections of the section
-// 			const section = await Section.findById(sectionId)
-// 			if (section) {
-// 				const subSections = section.subSection
-// 				for (const subSectionId of subSections) {
-// 					await SubSection.findByIdAndDelete(subSectionId)
-// 				}
-// 			}
-
-// 			// Delete the section
-// 			await Section.findByIdAndDelete(sectionId)
-// 		}
-
-// 		// Delete the course
-// 		await Course.findByIdAndDelete(courseId)
-
-// 		return res.status(200).json({
-// 			success: true,
-// 			message: "Course deleted successfully",
-// 		})
-// 	} catch (error) {
-// 		console.error(error)
-// 		return res.status(500).json({
-// 			success: false,
-// 			message: "Server error",
-// 			error: error.message,
-// 		})
-// 	}
-// }
+        // Delete the course
+        await Course.findByIdAndDelete(courseId)
+        return res.status(200).json({
+            success: true,
+            message: "Course deleted successfully",
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}

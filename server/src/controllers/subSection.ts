@@ -37,12 +37,13 @@ export const updateSubSection = async (req: Request, res: Response) => {
         const { subSectionId, title, timeDuration, description } = req.body;
         const video = req.files?.videoFile;
         if (!(subSectionId || title || !timeDuration || !description || !video)) {
-            res.status(400).json({
-                success: false,
-                message: 'enter at least one field to update'
-            });
+            throw new Error("invalid req");
         }
         await SubSection.findByIdAndUpdate({ id: subSectionId }, { title, timeDuration, description, video }, { new: true });
+        res.status(200).json({
+            success: true,
+            message: 'subsection updated'
+        })
     } catch (error: any) {
         res.status(500).json({
             success: false,

@@ -14,10 +14,9 @@ export const resetPasswordToken = async (req: Request, res: Response) => {
             throw new Error(`user with email ${email} is not registered with us`);
         }
         const token = crypto.randomBytes(20).toString("hex");
-        const updatedDetails = await User.findOneAndUpdate({ email: email }, { token: token, resetPasswordExpires: Date.now() + 3600000, }, { new: true });
+        await User.findOneAndUpdate({ email: email }, { token: token, resetPasswordExpires: Date.now() + 3600000, }, { new: true });
 
         const url = `${process.env.UPDATE_PASSWORD_URL}/${token}`;
-
         await mailSender(email, "Password Reset", `Your Link for email verification is ${url} Please click this url to reset your password.`);
 
         res.status(200).json({

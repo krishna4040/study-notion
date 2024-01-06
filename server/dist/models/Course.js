@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const courseSchema = new mongoose_1.Schema({
+    _id: mongoose_1.Schema.Types.ObjectId,
     courseName: String,
     courseDescription: String,
     instructor: {
@@ -38,6 +39,8 @@ const courseSchema = new mongoose_1.Schema({
         type: String,
         enum: ['Draft', 'Published'],
     },
-    sold: Number
+    sold: Number,
+    totalDuration: String,
+    progressPercentage: Number
 });
 exports.default = (0, mongoose_1.model)('Course', courseSchema);

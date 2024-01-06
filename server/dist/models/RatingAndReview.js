@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const ratingAndReviewSchema = new mongoose_1.Schema({
+    _id: mongoose_1.Schema.Types.ObjectId,
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
