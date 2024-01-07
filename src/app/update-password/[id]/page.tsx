@@ -7,9 +7,11 @@ import { resetPassword } from '@/services/opr/auth'
 import { AiFillEyeInvisible } from 'react-icons/ai'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { AiFillEye } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
 
 const UpdatePassword = () => {
 
+    const router = useRouter();
     const pathname = usePathname();
     const dispacth = useAppDispatch();
     const { loading } = useAppSelector(state => state.auth);
@@ -25,7 +27,7 @@ const UpdatePassword = () => {
     const submitHandler = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const token = pathname.split('/').at(-1);
-        dispacth(resetPassword(formdata.password, formdata.confirmPassword, token!));
+        dispacth(resetPassword(formdata.password, formdata.confirmPassword, token!, router));
     }
 
     return (

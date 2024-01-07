@@ -16,7 +16,7 @@ const MyCourse = () => {
 
     const getMyCourses = async () => {
         try {
-            const response = await fetchInstructorCourses(token);
+            const response = await fetchInstructorCourses(token!);
             setMycourses(response);
         } catch (error) {
             console.log("unable to fecth instructor courses");
