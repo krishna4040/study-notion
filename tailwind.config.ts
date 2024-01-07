@@ -133,7 +133,7 @@ const config: Config = {
       maxWidth: {
         maxContent: "1260px",
         maxContentTab: "650px"
-      },
+      }
     },
   },
   plugins: [],

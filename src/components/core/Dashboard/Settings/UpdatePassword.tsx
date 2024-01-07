@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { useAppSelector } from "@/lib/hooks"
 import { useRouter } from "next/navigation"
-import { changePassword } from "../../../../services/opr/settings"
+import { changePassword } from "@/services/opr/settings"
 
 export default function UpdatePassword() {
 
@@ -101,7 +101,7 @@ export default function UpdatePassword() {
                     >
                         Cancel
                     </button>
-                    <button>Update</button>
+                    <button className={`flex shadow-[-2px_-2px_0px_0px_inset] gap-2 items-center justify-center text-center text-sm px-6 py-3 rounded font-bold hover:scale-95 transition-all duration-200 bg-yellow-50 text-black shadow-[#FFFFFF82]`}>Update</button>
                 </div>
             </form>
         </>
