@@ -21,7 +21,7 @@ interface formValues {
     about: string;
 }
 
-export function updateDisplayPicture(token: string, formData: formValues) {
+export function updateDisplayPicture(token: string, formData: any) {
     return async (dispatch: AppDispatch) => {
         const toastId = toast.loading("Loading...")
         try {
@@ -67,7 +67,7 @@ export function updateProfile(token: string, formData: formValues) {
     }
 }
 
-export async function changePassword(token: string, formData: formValues) {
+export async function changePassword(token: string, formData: any) {
     const toastId = toast.loading("Loading...")
     try {
         const response = await axios.post(CHANGE_PASSWORD_API, formData, {

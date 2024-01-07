@@ -82,8 +82,6 @@ export function login(email: string, password: string, router: AppRouterInstance
                 throw new Error(data.message)
             }
 
-            toast.success("Login Successful")
-            dispatch(setToken(data.data.token))
             const userImage = data?.data?.image
                 ? data.data.image
                 : `https://api.dicebear.com/5.x/initials/svg?seed=${data.data.firstName} ${data.data.lastName}`
@@ -91,10 +89,12 @@ export function login(email: string, password: string, router: AppRouterInstance
                 ...data.data,
                 image: userImage
             }
+            dispatch(setToken(user.token));
             dispatch(setUser(user));
             // localStorage.setItem("user", JSON.stringify(data.data));
             // localStorage.setItem("token", JSON.stringify(data.data.token));
-            router.push("/dashboard/my-profile");
+            router.replace("/dashboard/my-profile");
+            toast.success("Login Successful");
         } catch (error: any) {
             toast.error("Login Failed")
             console.log(error);

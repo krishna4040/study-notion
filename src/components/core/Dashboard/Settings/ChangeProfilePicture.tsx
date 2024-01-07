@@ -60,9 +60,11 @@ export default function ChangeProfilePicture() {
             <div className="flex items-center justify-between rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-8 px-12 text-richblack-5">
                 <div className="flex items-center gap-x-4">
                     <Image
-                        src={previewSource || user?.image}
+                        src={previewSource as string || user?.image!}
                         alt={`profile-${user?.firstName}`}
                         className="aspect-square w-[78px] rounded-full object-cover"
+                        width={140}
+                        height={32}
                     />
                     <div className="space-y-2">
                         <p>Change Profile Picture</p>

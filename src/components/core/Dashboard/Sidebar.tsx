@@ -1,19 +1,19 @@
 import React from 'react'
 import { sidebarLinks } from '../../../data/dashboard-links'
-// import { logout } from '@/services/opr/auth'
-import { useAppSelector } from '@/lib/hooks'
+import { logout } from '@/services/opr/auth'
+import { useAppSelector, useAppDispatch } from '@/lib/hooks'
 import { VscSettingsGear, VscSignOut } from 'react-icons/vsc'
 import Link from 'next/link';
 import { modalData } from '@/components/common/Modal'
 import { usePathname, useRouter } from 'next/navigation'
 
-const Sidebar = ({ setModalData }: { setModalData?: React.Dispatch<React.SetStateAction<modalData | null>> }) => {
+const Sidebar = ({ setModalData }: { setModalData: React.Dispatch<React.SetStateAction<modalData | null>> }) => {
 
     const { user, loading: profileLoading } = useAppSelector(state => state.profile);
     const { loading: authLoading } = useAppSelector(state => state.auth);
 
-    // const dispacth = useAppDispatch();
-    // const router = useRouter();
+    const dispacth = useAppDispatch();
+    const router = useRouter();
     const pathname = usePathname();
 
 
@@ -79,15 +79,14 @@ const Sidebar = ({ setModalData }: { setModalData?: React.Dispatch<React.SetStat
                 </Link>
 
                 <button onClick={() => {
-                    // setModalData({
-                    //     text1: "Are You sure",
-                    //     text2: "You will be Logged out of your Account",
-                    //     btn1Text: "Logout",
-                    //     btn2Text: "Cancel",
-                    //     btn1Handler: () => { dispacth(logout(router)) },
-                    //     btn2Handler: () => { setModalData(null); }
-                    // })
-                    console.log("clicked");
+                    setModalData({
+                        text1: "Are You sure",
+                        text2: "You will be Logged out of your Account",
+                        btn1Text: "Logout",
+                        btn2Text: "Cancel",
+                        btn1Handler: () => { dispacth(logout(router)) },
+                        btn2Handler: () => { setModalData(null); }
+                    })
                 }} className='px-8 py-2'>
                     <div className='flex items-center gap-3'>
                         <VscSignOut className='text-lg text-[#838894]' />
