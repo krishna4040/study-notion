@@ -13,7 +13,7 @@ import { RiDeleteBinFill } from "react-icons/ri";
 import Modal, { modalData } from '@/components/common/Modal';
 import { BiSolidDownArrow } from "react-icons/bi";
 import SubSectionModal from './SubSetionModal'
-import { subSection } from '@/lib/types';
+import { course, subSection } from '@/lib/types';
 
 const CourseBuilderForm = () => {
 
@@ -60,7 +60,8 @@ const CourseBuilderForm = () => {
     const handleDeleteSubSection = async (subSectionId: string, sectionId: string) => {
         const res = await deleteSubSection({ subSectionId, sectionId }, token!);
         if (res) {
-            dispacth(setCourse(res));
+            // const updatedCourse = {...course, courseContent: course?.courseContent.map(sec => sec._id === sectionId ? res : sec)}
+            // dispacth(setCourse(updatedCourse));
         }
         setConfirmationModal(null);
     }
@@ -120,7 +121,7 @@ const CourseBuilderForm = () => {
                                                             <RxDropdownMenu />
                                                             <p>{sub.title}</p>
                                                         </div>
-                                                        <div>
+                                                        <div onClick={(e) => { e.stopPropagation() }}>
                                                             <button onClick={() => { setEditSubSection({ ...sub, sectionId: section._id }) }}><MdModeEditOutline /></button>
                                                             <button onClick={() => {
                                                                 setConfirmationModal({

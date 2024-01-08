@@ -3,6 +3,8 @@ import React from 'react'
 import { useAppSelector } from '@/lib/hooks';
 import { FaCheck } from 'react-icons/fa'
 import CourseInformationForm from './CourseInformationForm'
+import CourseBuilderForm from './CourseBuilderForm';
+import PublishCourse from './PublishCourse';
 
 const RenderSteps = () => {
 
@@ -36,8 +38,8 @@ const RenderSteps = () => {
             </div>
 
             {step === 1 && <CourseInformationForm />}
-            {/* {step === 2 && <CourseBuilderForm/>} */}
-            {/* {step === 3 && <PublishForm/>} */}
+            {step === 2 && <CourseBuilderForm />}
+            {step === 3 && <PublishCourse />}
 
         </div>
     )

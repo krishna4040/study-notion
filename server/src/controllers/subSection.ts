@@ -40,8 +40,10 @@ export const updateSubSection = async (req: Request, res: Response) => {
             throw new Error("invalid req");
         }
         await SubSection.findByIdAndUpdate({ id: subSectionId }, { title, timeDuration, description, video }, { new: true });
+        const section = await Section.find({ subSection: subSectionId });
         res.status(200).json({
             success: true,
+            data: section,
             message: 'subsection updated'
         })
     } catch (error: any) {
@@ -59,9 +61,10 @@ export const deleteSubSection = async (req: Request, res: Response) => {
             throw new Error('Invalid req');
         }
         await SubSection.findByIdAndDelete({ id: subSectionId });
-        await Section.findOneAndDelete({ subSection: subSectionId });
+        const section = await Section.findOneAndDelete({ subSection: subSectionId }, { new: true });
         res.status(200).json({
             success: true,
+            data: section,
             message: 'sub section deleted succsesfully'
         });
     } catch (error: any) {
