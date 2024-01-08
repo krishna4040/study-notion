@@ -86,7 +86,7 @@ const MyCourse = () => {
 
                                             <Td>
                                                 <div className='flex items-center justify-center gap-1'>
-                                                    <button onClick={() => { }}><RiPencilFill className='text-lg text-[#6E727F]' /></button>
+                                                    <button onClick={() => { router.push(`/dashboard/edit-course/${course._id}`) }}><RiPencilFill className='text-lg text-[#6E727F]' /></button>
                                                     <button onClick={() => {
                                                         setConfirmationModalData({
                                                             text1: "Do you want to delete this course",
