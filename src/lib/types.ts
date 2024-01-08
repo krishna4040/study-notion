@@ -4,7 +4,7 @@ export interface course {
     courseDescription: string;
     instructor: user;
     whatYouWillLearn: string;
-    courseContent: course[];
+    courseContent: section[];
     ratingAndReviews: RatingAndReview[];
     price: number;
     thumbnail: string;
@@ -56,16 +56,16 @@ export interface RatingAndReview {
 
 export interface section {
     _id: string;
-    sectionName: String,
+    sectionName: string;
     subSection: Array<subSection>
 }
 
 export interface subSection {
     _id: string;
     title: string,
-    timeDuration: String,
-    description: String,
-    videoUrl: String
+    timeDuration: string,
+    description: string,
+    videoUrl: string
 }
 
 export interface user {

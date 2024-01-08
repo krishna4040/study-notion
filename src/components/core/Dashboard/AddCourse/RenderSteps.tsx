@@ -2,7 +2,7 @@
 import React from 'react'
 import { useAppSelector } from '@/lib/hooks';
 import { FaCheck } from 'react-icons/fa'
-import CourseInformationForm from './CourseInformation/CourseInformationForm'
+import CourseInformationForm from './CourseInformationForm'
 
 const RenderSteps = () => {
 
