@@ -43,6 +43,7 @@ const CourseBuilderForm = () => {
             res = await createSection({ sectionName: data.sectionName, courseId: course?._id }, token!);
         }
         if (res) {
+            console.log(res);
             dispacth(setCourse(res));
             setEditSectionName(false);
             setValue("sectionName", "");
@@ -68,98 +69,97 @@ const CourseBuilderForm = () => {
 
     return (
         <div>
-            <h2>Couse Builder</h2>
-            <form onSubmit={handleSubmit(sumbitHandler)}>
-                <div>
-                    <label htmlFor="sectiionName">Section Name <sup>*</sup></label>
-                    <input type="text" placeholder='Add Section Name...' {...register("sectionName", { required: true })} />
-                    {errors.sectionName && <span>Section name is requiered</span>}
-                </div>
-                <div>
-                    <button>
-                        {editSectionName ? "Edit Section Name" : "Create Section"}
-                        <CiCirclePlus />
-                    </button>
-                    {editSectionName && <button type='button' onClick={() => { setEditSectionName(false); setValue("sectionName", "") }}>Cancel Edit</button>}
-                </div>
-            </form>
-            {
-                course?.courseContent.length! > 0 &&
-                // Nested view
-                <div>
-                    {
-                        course?.courseContent.map(section => {
-                            return (
-                                <details key={section._id} open>
-                                    <summary>
+            <div className='p-6 space-y-8 rounded-md border-richblack-700 bg-richblack-800 mt-7'>
+                <h2 className='text-richblack-5 font-semibold text-2xl font-inter'>Couse Builder</h2>
+                <form onSubmit={handleSubmit(sumbitHandler)} className='flex flex-col items-start justify-center gap-3 w-full'>
+                    <div className='w-full'>
+                        <input type="text" placeholder='Add Section to build your course' {...register("sectionName", { required: true })} className='w-full form-style' />
+                        {errors.sectionName && <span className='text-pink-500 text-xs'>Section name is requiered</span>}
+                    </div>
+                    <div>
+                        <button className='flex items-center justify-start gap-2 rounded-lg border py-3 px-4 text-yellow-50'>
+                            <CiCirclePlus />
+                            {editSectionName ? "Edit Section Name" : "Create Section"}
+                        </button>
+                        {editSectionName && <button type='button' onClick={() => { setEditSectionName(false); setValue("sectionName", "") }}>Cancel Edit</button>}
+                    </div>
+                </form>
+                {
+                    course?.courseContent.length! > 0 &&
+                    // Nested view
+                    <div className='px-6 bg-richblack-700 border rounded-lg border-richblack-600'>
+                        {
+                            course?.courseContent.map(section => {
+                                return (
+                                    <details key={section._id} open>
+                                        <summary className='flex items-center justify-between py-3'>
+                                            <div className='flex items-center gap-2'>
+                                                <RxDropdownMenu className='text-xl text-richblack-400' />
+                                                <p className='font-semibold font-inter text-richblack-50'>{section.sectionName}</p>
+                                            </div>
+                                            <div className='flex items-center gap-2'>
+                                                <button onClick={() => { editSectionNameHandler(section._id, section.sectionName) }}><MdModeEditOutline className='text-xl text-richblack-400' /></button>
+                                                <button onClick={() => {
+                                                    setConfirmationModal({
+                                                        text1: "Delete this section",
+                                                        text2: "All The lectures in this section will be deleted",
+                                                        btn1Text: "Delete",
+                                                        btn2Text: "Cancel",
+                                                        btn1Handler: () => { deleteSectionHandler(section._id) },
+                                                        btn2Handler: () => { setConfirmationModal(null) }
+                                                    })
+                                                }}><RiDeleteBinFill className='text-xl text-richblack-400' /></button>
+                                                <span>|</span>
+                                                <BiSolidDownArrow className='text-xl text-richblack-400' />
+                                            </div>
+                                        </summary>
                                         <div>
-                                            <RxDropdownMenu />
-                                            <p>{section.sectionName}</p>
-                                        </div>
-                                        <div>
-                                            <button onClick={() => { editSectionNameHandler(section._id, section.sectionName) }}><MdModeEditOutline /></button>
-                                            <button onClick={() => {
-                                                setConfirmationModal({
-                                                    text1: "Delete this section",
-                                                    text2: "All The lectures in this section will be deleted",
-                                                    btn1Text: "Delete",
-                                                    btn2Text: "Cancel",
-                                                    btn1Handler: () => { deleteSectionHandler(section._id) },
-                                                    btn2Handler: () => { setConfirmationModal(null) }
+                                            {
+                                                section.subSection.map(sub => {
+                                                    return (
+                                                        <div key={sub._id} onClick={() => { setViewSubSection(sub) }}>
+                                                            <div>
+                                                                <RxDropdownMenu />
+                                                                <p>{sub.title}</p>
+                                                            </div>
+                                                            <div onClick={(e) => { e.stopPropagation() }}>
+                                                                <button onClick={() => { setEditSubSection({ ...sub, sectionId: section._id }) }}><MdModeEditOutline /></button>
+                                                                <button onClick={() => {
+                                                                    setConfirmationModal({
+                                                                        text1: "Delete this sub section",
+                                                                        text2: "Selected lecture will be deleted",
+                                                                        btn1Text: "Delete",
+                                                                        btn2Text: "Cancel",
+                                                                        btn1Handler: () => { handleDeleteSubSection(sub._id, section._id) },
+                                                                        btn2Handler: () => { setConfirmationModal(null) }
+                                                                    })
+                                                                }}>
+                                                                    <RiDeleteBinFill />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )
                                                 })
-                                            }}><RiDeleteBinFill /></button>
-                                            <span>|</span>
-                                            <BiSolidDownArrow />
+                                            }
+                                            <button onClick={() => { setAddSubSection(section._id) }} className='flex items-center justify-center text-yellow-50 gap-1'>
+                                                <CiCirclePlus />
+                                                <span>Add Lecture</span>
+                                            </button>
                                         </div>
-                                    </summary>
-                                    <div>
-                                        {
-                                            section.subSection.map(sub => {
-                                                return (
-                                                    <div key={sub._id} onClick={() => { setViewSubSection(sub) }}>
-                                                        <div>
-                                                            <RxDropdownMenu />
-                                                            <p>{sub.title}</p>
-                                                        </div>
-                                                        <div onClick={(e) => { e.stopPropagation() }}>
-                                                            <button onClick={() => { setEditSubSection({ ...sub, sectionId: section._id }) }}><MdModeEditOutline /></button>
-                                                            <button onClick={() => {
-                                                                setConfirmationModal({
-                                                                    text1: "Delete this sub section",
-                                                                    text2: "Selected lecture will be deleted",
-                                                                    btn1Text: "Delete",
-                                                                    btn2Text: "Cancel",
-                                                                    btn1Handler: () => { handleDeleteSubSection(sub._id, section._id) },
-                                                                    btn2Handler: () => { setConfirmationModal(null) }
-                                                                })
-                                                            }}>
-                                                                <RiDeleteBinFill />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                        <button onClick={() => { setAddSubSection(section._id) }}>
-                                            Add Lecture
-                                            <CiCirclePlus />
-                                        </button>
-                                    </div>
-                                </details>
-                            )
-                        })
-                    }
-                    {addSubSection && <SubSectionModal modalData={addSubSection} setModalData={setAddSubSection} />}
-                    {editSubSection && <SubSectionModal modalData={editSubSection} setModalData={setEditSubSection} />}
-                    {viewSubSection && <SubSectionModal modalData={viewSubSection} setModalData={setViewSubSection} />}
-                    {confirmationModal && <Modal modalData={confirmationModal} />}
-                </div>
-            }
-            <div>
+                                    </details>
+                                )
+                            })
+                        }
+                    </div>
+                }
+            </div>
+            <div className='flex items-center justify-end gap-3'>
                 <button onClick={() => {
                     dispacth(setEditCourse(true));
                     dispacth(setStep(1));
-                }}>Back</button>
+                }} className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5'>
+                    Back
+                </button>
 
                 <button onClick={() => {
                     if (course?.courseContent.length === 0 || course?.courseContent.some(section => section.subSection.length === 0)) {
@@ -167,11 +167,15 @@ const CourseBuilderForm = () => {
                         return;
                     }
                     dispacth(setStep(3));
-                }}>
+                }} className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black'>
                     Next
                     <IoIosArrowDroprightCircle />
                 </button>
             </div>
+            {addSubSection && <SubSectionModal modalData={addSubSection} setModalData={setAddSubSection} add={true} />}
+            {editSubSection && <SubSectionModal modalData={editSubSection} setModalData={setEditSubSection} edit={true} />}
+            {viewSubSection && <SubSectionModal modalData={viewSubSection} setModalData={setViewSubSection} view={true} />}
+            {confirmationModal && <Modal modalData={confirmationModal} />}
         </div>
     )
 }

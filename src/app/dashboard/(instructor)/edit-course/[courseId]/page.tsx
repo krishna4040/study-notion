@@ -2,7 +2,7 @@
 import RenderSteps from '@/components/core/Dashboard/AddCourse/RenderSteps';
 import { setCourse, setEditCourse } from '@/lib/feature/courseSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { getFullDetailsOfCourse } from '@/services/opr/course';
+import { fetchCourseDetails } from '@/services/opr/course';
 import React, { useEffect, useState } from 'react'
 
 const page = ({ params }: { params: { courseId: string } }) => {
@@ -10,14 +10,12 @@ const page = ({ params }: { params: { courseId: string } }) => {
     const dispacth = useAppDispatch();
 
     const { courseId } = params;
-    const { course } = useAppSelector(state => state.course);
     const { token } = useAppSelector(state => state.auth);
     const [loading, setLoading] = useState(false);
 
     const populateCourseDetails = async () => {
         setLoading(true);
-        // give a check
-        const res = await getFullDetailsOfCourse(courseId, token!);
+        const res = await fetchCourseDetails(courseId, token!);
         dispacth(setEditCourse(true));
         dispacth(setCourse(res));
     }

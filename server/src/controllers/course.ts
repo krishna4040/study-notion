@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
-import { UploadedFile } from 'express-fileupload'
-import Course, { course } from "../models/Course"
+import Course from "../models/Course"
 import Category from "../models/Category"
 import User from "../models/User"
 import { uploadImageToCloudinary } from "../utils/imageUploader"
@@ -8,77 +7,46 @@ import Section, { section } from '../models/Section'
 import SubSection from '../models/SubSection'
 import CourseProgress from '../models/CourseProgress'
 import { convertSecondsToDuration } from '../utils/secToDuration'
+import { v2 } from 'cloudinary'
+import streamifier from 'streamifier'
+import { uploadBuffer } from '../utils/bufferUploader'
 require('dotenv').config();
 
 // Function to create a new course
 export const createCourse = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
-        let {
-            courseName,
-            courseDescription,
-            whatYouWillLearn,
-            price,
-            tag,
-            category,
-            status,
-            instructions,
-        } = req.body;
+        let { courseName, courseDescription, whatYouWillLearn, price, tag, categoryId, status, instructions, courseImage } = req.body;
 
-        const thumbnail = req.files?.thumbnail;
-
-        // Check if any of the required fields are missing
-        if (
-            !courseName ||
-            !courseDescription ||
-            !whatYouWillLearn ||
-            !price ||
-            !tag ||
-            !thumbnail ||
-            !category
-        ) {
+        if (!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !courseImage || !categoryId) {
             throw new Error('Invalid req');
         }
         if (!status || status === undefined) {
             status = "Draft";
         }
-        // Check if the user is an instructor
-        const instructorDetails = await User.findById(userId, {
-            accountType: "Instructor",
-        });
 
-        if (!instructorDetails) {
-            throw new Error('Instructor details not found');
-        }
-
-        const categoryDetails = await Category.findById(category);
+        const categoryDetails = await Category.findById(categoryId);
         if (!categoryDetails) {
             throw new Error('Category details not found');
         }
-        const thumbnailImage = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME!);
+        const thumbnailImage = uploadBuffer(courseImage);
+
         const newCourse = await Course.create({
             courseName,
             courseDescription,
-            instructor: instructorDetails._id,
+            instructor: userId,
             whatYouWillLearn: whatYouWillLearn,
             price,
             tag: tag,
             category: categoryDetails._id,
-            thumbnail: thumbnailImage.secure_url,
+            thumbnail: thumbnailImage,
             status: status,
             instructions: instructions,
         });
 
-        await User.findByIdAndUpdate(
-            { _id: instructorDetails._id, },
-            { $push: { courses: newCourse._id, } },
-            { new: true }
-        );
-        await Category.findByIdAndUpdate(
-            { _id: category },
-            { $push: { course: newCourse._id } },
-            { new: true }
-        );
+        await User.findByIdAndUpdate({ _id: userId, }, { $push: { courses: newCourse._id, } });
+        await Category.findByIdAndUpdate({ _id: categoryId }, { $push: { course: newCourse._id } });
+
         res.status(200).json({
             success: true,
             message: "Course Created Successfully",
@@ -89,6 +57,7 @@ export const createCourse = async (req: Request, res: Response) => {
             success: false,
             message: error.message
         });
+        console.log(error);
     }
 };
 
@@ -200,9 +169,9 @@ export const editCourse = async (req: Request, res: Response) => {
         for (const key in updates) {
             if (updates.hasOwnProperty(key)) {
                 if (key === "tag" || key === "instructions") {
-                    course[key] = JSON.parse(updates[key])
+                    // course[key] = JSON.parse(updates[key])
                 } else {
-                    course[key] = updates[key]
+                    // course[key] = updates[key]
                 }
             }
         }

@@ -16,7 +16,6 @@ const {
     DELETE_SUBSECTION_API,
     GET_ALL_INSTRUCTOR_COURSES_API,
     DELETE_COURSE_API,
-    GET_FULL_COURSE_DETAILS_AUTHENTICATED,
     CREATE_RATING_API,
     LECTURE_COMPLETION_API,
 } = courseEndpoints
@@ -37,11 +36,15 @@ export const getAllCourses = async () => {
     return result
 }
 
-export const fetchCourseDetails = async (courseId: string) => {
+export const fetchCourseDetails = async (courseId: string, token: string) => {
     const toastId = toast.loading("Loading...")
     let result = null
     try {
-        const response = await axios.post(COURSE_DETAILS_API, { courseId });
+        const response = await axios.get(`${COURSE_DETAILS_API}/${courseId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         if (!response.data.success) {
             throw new Error(response.data.message)
         }
@@ -51,6 +54,23 @@ export const fetchCourseDetails = async (courseId: string) => {
     }
     toast.dismiss(toastId)
     return result
+}
+
+export const fetchInstructorCourses = async (token: string) => {
+    const toastId = toast.loading("Loading...");
+    let res = null;
+    try {
+        const { data } = await axios.get(GET_ALL_INSTRUCTOR_COURSES_API, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        res = data.data;
+    } catch (error) {
+        res = error;
+    }
+    toast.dismiss(toastId);
+    return res;
 }
 
 // fetching the available course categories
@@ -69,7 +89,8 @@ export const fetchCourseCategories = async () => {
 }
 
 // add the course details
-export const addCourseDetails = async (data: any, token: string) => {
+export const addCourseDetails = async (data: FormData, token: string) => {
+    // result has schema of course
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
@@ -85,10 +106,10 @@ export const addCourseDetails = async (data: any, token: string) => {
         toast.success("Course Details Added Successfully");
         result = response?.data?.data;
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error(error.message);
     }
     toast.dismiss(toastId)
-    return result
+    return result;
 }
 
 // edit the course details
@@ -116,6 +137,7 @@ export const editCourseDetails = async (data: any, token: string) => {
 
 // create a section
 export const createSection = async (data: any, token: string) => {
+    // res is of type course
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
@@ -128,7 +150,7 @@ export const createSection = async (data: any, token: string) => {
             throw new Error("Could Not Create Section");
         }
         toast.success("Course Section Created");
-        result = response?.data?.updatedCourse;
+        result = response?.data?.data;
     } catch (error: any) {
         toast.error(error.message);
     }
@@ -248,27 +270,6 @@ export const deleteSubSection = async (data: any, token: string) => {
     return result;
 }
 
-// fetching all courses under a specific instructor
-export const fetchInstructorCourses = async (token: string) => {
-    let result = [];
-    const toastId = toast.loading("Loading...");
-    try {
-        const response = await axios.get(GET_ALL_INSTRUCTOR_COURSES_API, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        if (!response?.data?.success) {
-            throw new Error("Could Not Fetch Instructor Courses");
-        }
-        result = response?.data?.data;
-    } catch (error: any) {
-        toast.error(error.message);
-    }
-    toast.dismiss(toastId);
-    return result;
-}
-
 // delete a course
 export const deleteCourse = async (data: any, token: string) => {
     const toastId = toast.loading("Loading...");
@@ -282,27 +283,6 @@ export const deleteCourse = async (data: any, token: string) => {
         toast.error(error.message);
     }
     toast.dismiss(toastId);
-}
-
-// get full details of a course
-export const getFullDetailsOfCourse = async (courseId: string, token: string) => {
-    const toastId = toast.loading("Loading...");
-    let result = null;
-    try {
-        const response = await axios.post(GET_FULL_COURSE_DETAILS_AUTHENTICATED, courseId, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        if (!response.data.success) {
-            throw new Error(response.data.message);
-        }
-        result = response?.data?.data;
-    } catch (error: any) {
-        result = error.message
-    }
-    toast.dismiss(toastId);
-    return result;
 }
 
 // mark a lecture as complete

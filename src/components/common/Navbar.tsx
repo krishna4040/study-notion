@@ -68,7 +68,7 @@ const Navbar = () => {
                                                     {
                                                         !subLinks.length ? <div></div> :
                                                             subLinks.map((ele, idx) => {
-                                                                return <Link href={`/catalouge/${ele.name}`}><p className='p-3 text-lg font-semibold rounded-md hover:bg-richblack-100' key={idx}>{ele.name}</p></Link>
+                                                                return <Link href={`/catalouge/${ele.name}`} key={idx}><p className='p-3 text-lg font-semibold rounded-md hover:bg-richblack-100'>{ele.name}</p></Link>
                                                             })
                                                     }
                                                 </div>

@@ -7,8 +7,8 @@ import { RiDeleteBin6Line, RiPencilFill } from 'react-icons/ri'
 import { useRouter } from 'next/navigation';
 import { course } from '@/lib/types'
 import Image from 'next/image'
-import { Table, Tbody, Thead, Th, Tr, Td } from 'react-super-responsive-table'
-import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+// import { Table, Tbody, Thead, Th, Tr, Td,  } from 'react-super-responsive-table'
+// import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import Modal, { modalData } from '@/components/common/Modal'
 
 const MyCourse = () => {
@@ -22,6 +22,7 @@ const MyCourse = () => {
     const getMyCourses = async () => {
         try {
             const response = await fetchInstructorCourses(token!);
+            console.log(response);
             setMycourses(response);
         } catch (error) {
             console.log("unable to fecth instructor courses");
@@ -51,22 +52,22 @@ const MyCourse = () => {
             {
                 !myCourses.length ? (<div></div>)
                     :
-                    <Table className='w-full border rounded-lg border-[#2C333F] lg:w-[900px] mx-auto mt-10'>
-                        <Thead>
-                            <Th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Courses</Th>
-                            <Th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Duration</Th>
-                            <Th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Price</Th>
-                            <Th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Actions</Th>
-                        </Thead>
-                        <Tbody>
+                    <table className='w-full border rounded-lg border-[#2C333F] lg:w-[900px] mx-auto mt-10'>
+                        <thead>
+                            <th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Courses</th>
+                            <th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Duration</th>
+                            <th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Price</th>
+                            <th className='p-4 border-b bg-[#2C333F] border-[#2C333F] text-[#C5C7D4] text-left'>Actions</th>
+                        </thead>
+                        <tbody>
                             {
                                 myCourses.map((course, index) => {
                                     return (
-                                        <Tr key={index}>
+                                        <tr key={index}>
 
-                                            <Td>
+                                            <td>
                                                 <div className='flex gap-5 p-4'>
-                                                    <Image src={course.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
+                                                    <Image src={course?.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
                                                     <div>
                                                         <p className='font-medium font-inter text-[#F1F2FF]'>{course.courseName}</p>
                                                         <p className='font-inter text-[#838894]'>{course.courseDescription}</p>
@@ -74,17 +75,17 @@ const MyCourse = () => {
                                                         <p className='uppercase'>{course.status}</p>
                                                     </div>
                                                 </div>
-                                            </Td>
+                                            </td>
 
-                                            <Td>
+                                            <td>
                                                 <p className='text-[#838894] p-4'>{course.totalDuration || "2hrs 30min"}</p>
-                                            </Td>
+                                            </td>
 
-                                            <Td>
+                                            <td>
                                                 <p className='text-[#838894] p-4'>{course.price}</p>
-                                            </Td>
+                                            </td>
 
-                                            <Td>
+                                            <td>
                                                 <div className='flex items-center justify-center gap-1'>
                                                     <button onClick={() => { router.push(`/dashboard/edit-course/${course._id}`) }}><RiPencilFill className='text-lg text-[#6E727F]' /></button>
                                                     <button onClick={() => {
@@ -98,14 +99,14 @@ const MyCourse = () => {
                                                         })
                                                     }}><RiDeleteBin6Line className='text-lg text-[#6E727F]' /></button>
                                                 </div>
-                                            </Td>
+                                            </td>
 
-                                        </Tr>
+                                        </tr>
                                     )
                                 })
                             }
-                        </Tbody>
-                    </Table>
+                        </tbody>
+                    </table>
             }
             {confirmationModalData && <Modal modalData={confirmationModalData} />}
         </div>

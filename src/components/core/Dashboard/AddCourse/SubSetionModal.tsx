@@ -84,8 +84,8 @@ const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalDat
     }
 
     return (
-        <div>
-            <div>
+        <div className='fixed inset-0 z-[1000] !mt-0 flex flex-col items-center justify-center  overflow-auto bg-white bg-opacity-10 backdrop-blur-sm h-[756px]'>
+            <div className='flex py-4 px-6 items-center justify-between bg-richblack-600 border border-richblack-600 w-[665px] scale-75 -mb-24'>
                 <h2>
                     {add && "Adding"}
                     {view && "Viewing"}
@@ -93,25 +93,30 @@ const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalDat
                 </h2>
                 <button onClick={() => { !loading && setModalData(null) }}><RxCross2 /></button>
             </div>
-            <form onSubmit={handleSubmit(sumbitHandler)}>
-                <div className='flex flex-col justify-center gap-[6px]'>
+            <form onSubmit={handleSubmit(sumbitHandler)} className='p-8 bg-richblack-800 flex flex-col items-center justify-center gap-6 w-[665px] scale-75'>
+                <div className='flex flex-col justify-center gap-[6px] w-full'>
                     <label htmlFor="lectureVideo" className='font-inter text-[#F1F2FF]'>Lecture Video<sup className='text-[#EF476F]'>*</sup></label>
                     <ImageComponent register={register} label='lectureVideo' />
                 </div>
-                <div>
-                    <label htmlFor="lectureTitle">Lecture title</label>
-                    <input type="text" {...register("lectureTitle", { required: true })} />
-                    {errors.lectureTitle && <span>Lecture title is requiered</span>}
+                <div className='flex flex-col justify-center gap-[6px] w-full'>
+                    <label htmlFor="lectureTitle" className='font-inter text-[#F1F2FF]'>Lecture title<sup className='text-[#EF476F]'>*</sup></label>
+                    <input type="text" {...register("lectureTitle", { required: true })} className='w-full form-style' placeholder='Enter Lecture Title' />
+                    {errors.lectureTitle && <span className='text-pink-500 text-xs'>Lecture title is requiered</span>}
                 </div>
-                <div>
-                    <label htmlFor="lectureDescription">Lecture Description</label>
-                    <input type="text" {...register("lectureDescription", { required: true })} />
-                    {errors.lectureDescription && <span>Lecture description is requiered</span>}
+                <div className='flex flex-col justify-center gap-[6px] w-full'>
+                    <label htmlFor="lectureDescription">Lecture Description<sup className='text-[#EF476F]'>*</sup></label>
+                    <input type="text" {...register("lectureDescription", { required: true })} className='w-full form-style' placeholder='Enter Lecture Description' />
+                    {errors.lectureDescription && <span className='text-pink-500 text-xs'>Lecture description is requiered</span>}
                 </div>
                 {!view &&
-                    <button>
-                        {edit ? "Save Changes" : "Save"}
-                    </button>
+                    <div className='flex items-center gap-2 justify-end w-full'>
+                        <button type='button' className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5'>
+                            Cancel
+                        </button>
+                        <button className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black'>
+                            {edit ? "Save Changes" : "Save"}
+                        </button>
+                    </div>
                 }
             </form>
         </div>
