@@ -7,8 +7,6 @@ import Section, { section } from '../models/Section'
 import SubSection from '../models/SubSection'
 import CourseProgress from '../models/CourseProgress'
 import { convertSecondsToDuration } from '../utils/secToDuration'
-import { v2 } from 'cloudinary'
-import streamifier from 'streamifier'
 import { uploadBuffer } from '../utils/bufferUploader'
 require('dotenv').config();
 
@@ -29,7 +27,8 @@ export const createCourse = async (req: Request, res: Response) => {
         if (!categoryDetails) {
             throw new Error('Category details not found');
         }
-        const thumbnailImage = uploadBuffer(courseImage);
+        const thumbnailImage = await uploadBuffer(courseImage);
+        console.log(thumbnailImage);
 
         const newCourse = await Course.create({
             courseName,

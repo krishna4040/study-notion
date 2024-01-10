@@ -14,7 +14,7 @@ import Modal, { modalData } from '@/components/common/Modal'
 const MyCourse = () => {
 
     const { token } = useAppSelector(state => state.auth);
-    const [myCourses, setMycourses] = useState<Array<course>>([]);
+    const [myCourses, setMyCourses] = useState<Array<course>>([]);
     const [confirmationModalData, setConfirmationModalData] = useState<modalData | null>(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -23,9 +23,9 @@ const MyCourse = () => {
         try {
             const response = await fetchInstructorCourses(token!);
             console.log(response);
-            setMycourses(response);
+            setMyCourses(response);
         } catch (error) {
-            console.log("unable to fecth instructor courses");
+            console.log("unable to fetch instructor courses");
         }
     }
 
@@ -67,7 +67,7 @@ const MyCourse = () => {
 
                                             <td>
                                                 <div className='flex gap-5 p-4'>
-                                                    <Image src={course?.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
+                                                    <Image src={course?.thumbnail} alt="#" height={52} width={52} className='rounded-lg' fill />
                                                     <div>
                                                         <p className='font-medium font-inter text-[#F1F2FF]'>{course.courseName}</p>
                                                         <p className='font-inter text-[#838894]'>{course.courseDescription}</p>

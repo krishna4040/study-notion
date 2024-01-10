@@ -1,9 +1,15 @@
 import { v2 } from 'cloudinary'
-import streamifier from 'streamifier'
+require('dotenv').config();
 
-export const uploadBuffer = (buffer: Buffer) => {
-    let secure_url;
-    const cld_stream = v2.uploader.upload_stream({ folder: process.env.FOLDER }, (err, res) => secure_url = res?.secure_url);
-    streamifier.createReadStream(buffer).pipe(cld_stream);
-    return secure_url;
+export const uploadBuffer = async (buffer: Buffer): Promise<string> => {
+    const uploadPromise: any = await new Promise((resolve, reject) => {
+        v2.uploader.upload_stream((error, uploadResult) => {
+            if (error) {
+                reject(error); // Reject the Promise if there's an error
+            } else {
+                resolve(uploadResult); // Resolve the Promise with the uploadResult
+            }
+        }).end(buffer);
+    })
+    return uploadPromise?.secure_url;
 }

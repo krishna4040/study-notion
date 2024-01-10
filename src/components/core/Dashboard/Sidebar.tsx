@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { modalData } from '@/components/common/Modal'
 import { usePathname, useRouter } from 'next/navigation'
 
-const Sidebar = ({ setModalData }: { setModalData: React.Dispatch<React.SetStateAction<modalData | null>> }) => {
+const Sidebar = ({ setModalData }: { setModalData?: React.Dispatch<React.SetStateAction<modalData | null>> }) => {
 
     const { user, loading: profileLoading } = useAppSelector(state => state.profile);
     const { loading: authLoading } = useAppSelector(state => state.auth);
@@ -79,13 +79,13 @@ const Sidebar = ({ setModalData }: { setModalData: React.Dispatch<React.SetState
                 </Link>
 
                 <button onClick={() => {
-                    setModalData({
+                    setModalData!({
                         text1: "Are You sure",
                         text2: "You will be Logged out of your Account",
                         btn1Text: "Logout",
                         btn2Text: "Cancel",
                         btn1Handler: () => { dispacth(logout(router)) },
-                        btn2Handler: () => { setModalData(null); }
+                        btn2Handler: () => { setModalData!(null); }
                     })
                 }} className='px-8 py-2'>
                     <div className='flex items-center gap-3'>
