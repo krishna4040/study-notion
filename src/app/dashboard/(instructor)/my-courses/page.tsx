@@ -67,7 +67,7 @@ const MyCourse = () => {
 
                                             <td>
                                                 <div className='flex gap-5 p-4'>
-                                                    <Image src={course?.thumbnail} alt="#" height={52} width={52} className='rounded-lg' fill />
+                                                    <Image src={course?.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
                                                     <div>
                                                         <p className='font-medium font-inter text-[#F1F2FF]'>{course.courseName}</p>
                                                         <p className='font-inter text-[#838894]'>{course.courseDescription}</p>

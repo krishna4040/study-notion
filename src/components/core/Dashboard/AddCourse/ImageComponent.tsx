@@ -1,15 +1,20 @@
 import React, { ChangeEvent, useRef, useState } from 'react'
 import upload from '@/assets/Images/upload.svg'
 import Image from 'next/image'
-import { UseFormRegister } from 'react-hook-form'
 
-const ImageComponent = ({ register, label }: { register: UseFormRegister<any>, label: string }) => {
+type props = {
+    previewSource: string | ArrayBuffer | null;
+    setPreviewSource: React.Dispatch<React.SetStateAction<string | ArrayBuffer | null>>;
+    setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
+}
+
+const ImageComponent: React.FunctionComponent<props> = ({ previewSource, setPreviewSource, setImageFile }) => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [previewSource, setPreviewSource] = useState<string | null>(null);
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files![0]
+        setImageFile(file);
         if (file) {
             const reader = new FileReader()
             reader.readAsDataURL(file)
@@ -38,7 +43,7 @@ const ImageComponent = ({ register, label }: { register: UseFormRegister<any>, l
                 <label htmlFor="file-upload" onClick={selectHandler} className="flex items-center justify-center px-4 py-2 bg-indigo-500 text-black rounded-md cursor-pointer w-fit bg-yellow-50 font-medium font-inter">
                     Choose a File
                 </label>
-                <input type="file" {...register(label)} id="file-upload" accept=".jpg, .jpeg, .png" className="absolute hidden top-0 left-0 w-fit h-full opacity-0 cursor-pointer" onChange={changeHandler} ref={fileInputRef} />
+                <input type="file" id="file-upload" className="absolute hidden top-0 left-0 w-fit h-full opacity-0 cursor-pointer" onChange={changeHandler} ref={fileInputRef} />
             </div>
         </div>
     )

@@ -12,8 +12,8 @@ import { MdModeEditOutline } from "react-icons/md";
 import { RiDeleteBinFill } from "react-icons/ri";
 import Modal, { modalData } from '@/components/common/Modal';
 import { BiSolidDownArrow } from "react-icons/bi";
-import SubSectionModal from './SubSetionModal'
-import { course, subSection } from '@/lib/types';
+import SubSectionModal from './SubSectionModal'
+import { subSection } from '@/lib/types';
 
 const CourseBuilderForm = () => {
 
@@ -22,7 +22,7 @@ const CourseBuilderForm = () => {
     }>();
     const { register, handleSubmit, formState: { errors }, setValue } = form;
 
-    const dispacth = useAppDispatch();
+    const dispatch = useAppDispatch();
     const { course } = useAppSelector(state => state.course);
     const { token } = useAppSelector(state => state.auth)
 
@@ -34,7 +34,7 @@ const CourseBuilderForm = () => {
     const [viewSubSection, setViewSubSection] = useState<subSection | null>(null);
     const [confirmationModal, setConfirmationModal] = useState<modalData | null>(null);
 
-    const sumbitHandler = async (data: any) => {
+    const submitHandler = async (data: any) => {
         setLoading(true);
         let res;
         if (editSectionName) {
@@ -43,8 +43,7 @@ const CourseBuilderForm = () => {
             res = await createSection({ sectionName: data.sectionName, courseId: course?._id }, token!);
         }
         if (res) {
-            console.log(res);
-            dispacth(setCourse(res));
+            dispatch(setCourse(res));
             setEditSectionName(false);
             setValue("sectionName", "");
         }
@@ -54,7 +53,7 @@ const CourseBuilderForm = () => {
     const deleteSectionHandler = async (sectionId: string) => {
         const res = await deleteSection({ sectionId, courseId: course?._id }, token!);
         if (res) {
-            dispacth(setCourse(res));
+            dispatch(setCourse(res));
         }
         setConfirmationModal(null);
     }
@@ -62,7 +61,7 @@ const CourseBuilderForm = () => {
         const res = await deleteSubSection({ subSectionId, sectionId }, token!);
         if (res) {
             // const updatedCourse = {...course, courseContent: course?.courseContent.map(sec => sec._id === sectionId ? res : sec)}
-            // dispacth(setCourse(updatedCourse));
+            // dispatch(setCourse(updatedCourse));
         }
         setConfirmationModal(null);
     }
@@ -70,11 +69,11 @@ const CourseBuilderForm = () => {
     return (
         <div>
             <div className='p-6 space-y-8 rounded-md border-richblack-700 bg-richblack-800 mt-7'>
-                <h2 className='text-richblack-5 font-semibold text-2xl font-inter'>Couse Builder</h2>
-                <form onSubmit={handleSubmit(sumbitHandler)} className='flex flex-col items-start justify-center gap-3 w-full'>
+                <h2 className='text-richblack-5 font-semibold text-2xl font-inter'>Course Builder</h2>
+                <form onSubmit={handleSubmit(submitHandler)} className='flex flex-col items-start justify-center gap-3 w-full'>
                     <div className='w-full'>
                         <input type="text" placeholder='Add Section to build your course' {...register("sectionName", { required: true })} className='w-full form-style' />
-                        {errors.sectionName && <span className='text-pink-500 text-xs'>Section name is requiered</span>}
+                        {errors.sectionName && <span className='text-pink-500 text-xs'>Section name is required</span>}
                     </div>
                     <div>
                         <button className='flex items-center justify-start gap-2 rounded-lg border py-3 px-4 text-yellow-50'>
@@ -85,7 +84,7 @@ const CourseBuilderForm = () => {
                     </div>
                 </form>
                 {
-                    course?.courseContent.length! > 0 &&
+                    course?.courseContent && course.courseContent.length > 0 &&
                     // Nested view
                     <div className='px-6 bg-richblack-700 border rounded-lg border-richblack-600'>
                         {
@@ -117,7 +116,7 @@ const CourseBuilderForm = () => {
                                             {
                                                 section.subSection.map(sub => {
                                                     return (
-                                                        <div key={sub._id} onClick={() => { setViewSubSection(sub) }}>
+                                                        <div key={sub._id} onClick={() => { setViewSubSection(sub) }} className='border-b py-3 pl-6'>
                                                             <div>
                                                                 <RxDropdownMenu />
                                                                 <p>{sub.title}</p>
@@ -141,7 +140,7 @@ const CourseBuilderForm = () => {
                                                     )
                                                 })
                                             }
-                                            <button onClick={() => { setAddSubSection(section._id) }} className='flex items-center justify-center text-yellow-50 gap-1'>
+                                            <button onClick={() => { setAddSubSection(section._id) }} className='flex items-center justify-center text-yellow-50 gap-1 py-4'>
                                                 <CiCirclePlus />
                                                 <span>Add Lecture</span>
                                             </button>
@@ -155,18 +154,18 @@ const CourseBuilderForm = () => {
             </div>
             <div className='flex items-center justify-end gap-3'>
                 <button onClick={() => {
-                    dispacth(setEditCourse(true));
-                    dispacth(setStep(1));
+                    dispatch(setEditCourse(true));
+                    dispatch(setStep(1));
                 }} className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5'>
                     Back
                 </button>
 
                 <button onClick={() => {
                     if (course?.courseContent.length === 0 || course?.courseContent.some(section => section.subSection.length === 0)) {
-                        toast.error("Add atleat one section or subsection");
+                        toast.error("Add at least one section or subsection");
                         return;
                     }
-                    dispacth(setStep(3));
+                    dispatch(setStep(3));
                 }} className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black'>
                     Next
                     <IoIosArrowDroprightCircle />

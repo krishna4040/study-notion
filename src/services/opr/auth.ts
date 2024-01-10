@@ -17,7 +17,7 @@ export function sendOtp(email: string, router: AppRouterInstance) {
         try {
             const { data } = await axios.post(SENDOTP_API, { email });
             if (!data.success) {
-                throw new Error(data.message)
+                throw new Error(data.message);
             }
             toast.success("OTP Sent Successfully")
             router.push("/verify-email")
@@ -91,8 +91,7 @@ export function login(email: string, password: string, router: AppRouterInstance
             }
             dispatch(setToken(user.token));
             dispatch(setUser(user));
-            // localStorage.setItem("user", JSON.stringify(data.data));
-            // localStorage.setItem("token", JSON.stringify(data.data.token));
+            localStorage.setItem("token", JSON.stringify(data.data.token));
             router.replace("/dashboard/my-profile");
             toast.success("Login Successful");
         } catch (error: any) {
@@ -152,8 +151,7 @@ export function logout(router: AppRouterInstance) {
         dispatch(setToken(null))
         dispatch(setUser(null))
         dispatch(resetCart())
-        localStorage.removeItem("token")
-        localStorage.removeItem("user")
+        localStorage.removeItem("token");
         toast.success("Logged Out")
         router.push("/")
     }

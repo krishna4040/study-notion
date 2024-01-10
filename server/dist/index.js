@@ -21,11 +21,11 @@ app.use((0, cors_1.default)({
     origin: '*',
     credentials: true
 }));
-app.use(express_1.default.json());
 app.use((0, express_fileupload_1.default)({
     useTempFiles: true,
     tempFileDir: '/temp'
 }));
+app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use('/api/auth', user_1.default);
 app.use('/api/profile', profile_1.default);

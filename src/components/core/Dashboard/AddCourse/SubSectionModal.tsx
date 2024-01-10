@@ -1,12 +1,13 @@
 'use client'
 import { setCourse } from '@/lib/feature/courseSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { updateSubSection } from '@/services/opr/course';
-import React, { SetStateAction, useEffect, useState } from 'react'
+import { createSubSection, updateSubSection } from '@/services/opr/course';
+import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { RxCross2 } from "react-icons/rx";
 import ImageComponent from './ImageComponent';
+import { course } from '@/lib/types';
 
 type props = {
     modalData: any;
@@ -22,22 +23,41 @@ export type formValues = {
     lectureVideo: string;
 }
 
-const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalData, add = false, view = false, edit = false }) => {
+const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalData, add = false, view = false, edit = false }) => {
 
     const form = useForm<formValues>();
     const { register, handleSubmit, setValue, getValues, formState: { errors } } = form;
 
-    const dispacth = useAppDispatch();
+    const dispatch = useAppDispatch();
     const { token } = useAppSelector(state => state.auth);
     const { course } = useAppSelector(state => state.course);
 
     const [loading, setLoading] = useState(false);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [previewSource, setPreviewSource] = useState<string | ArrayBuffer | null>(null);
+
+    const [timeDuration, setTimeDuration] = useState({
+        HH: '',
+        MM: '',
+        SS: '',
+        total: ''
+    });
+
+    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setTimeDuration(prev => {
+            const updatedDuration = { ...prev, [name]: value };
+            const { HH, MM, SS } = updatedDuration;
+            const total = `${HH}HH${MM}MM${SS}SS`;
+            return { ...updatedDuration, total };
+        });
+    }
 
     useEffect(() => {
         if (view || edit) {
             setValue("lectureTitle", modalData.title);
             setValue("lectureDescription", modalData.description);
-            setValue("lectureVideo", modalData.videoUrl);
+            setPreviewSource(modalData.videoUrl);
         }
     }, []);
 
@@ -51,7 +71,7 @@ const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalDat
         return false;
     }
 
-    const sumbitHandler = async (data: any) => {
+    const submitHandler = async (data: formValues) => {
         if (view) {
             return;
         } else if (edit) {
@@ -60,26 +80,36 @@ const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalDat
             } else {
                 // handle edit
                 const currValue = getValues();
-                const formdata = new FormData();
-                formdata.append("sectionId", modalData.sectionId);
-                formdata.append("subSectionId", modalData._id);
+                const formData = new FormData();
+                formData.append("sectionId", modalData.sectionId);
+                formData.append("subSectionId", modalData._id);
                 if (currValue.lectureTitle !== modalData.title) {
-                    formdata.append("title", modalData.title);
+                    formData.append("title", modalData.title);
                 }
                 if (currValue.lectureDescription !== modalData.description) {
-                    formdata.append("description", modalData.description);
+                    formData.append("description", modalData.description);
                 }
+                //TODO: Pls check subsection edit
                 if (currValue.lectureVideo !== modalData.videoUrl) {
-                    formdata.append("videoUrl", modalData.videoUrl);
+                    // check under process
                 }
                 setLoading(true);
-                const res = await updateSubSection(formdata, token!);
-                dispacth(setCourse(res));
+                const res = await updateSubSection(formData, token!);
+                const updatedCourse = { ...course, courseContent: res };
+                dispatch(setCourse(updatedCourse as course));
                 setLoading(false);
             }
         } else {
-            // handle add
-
+            const formData = new FormData();
+            formData.append("sectionId", modalData.sectionId);
+            formData.append("title", data.lectureTitle);
+            formData.append("description", data.lectureDescription);
+            formData.append("timeDuration", timeDuration.total);
+            setLoading(true);
+            const res = await createSubSection(formData, imageFile!, token!);
+            const updatedCourse = { ...course, courseContent: res };
+            dispatch(setCourse(updatedCourse as course));
+            setLoading(false);
         }
     }
 
@@ -93,20 +123,28 @@ const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalDat
                 </h2>
                 <button onClick={() => { !loading && setModalData(null) }}><RxCross2 /></button>
             </div>
-            <form onSubmit={handleSubmit(sumbitHandler)} className='p-8 bg-richblack-800 flex flex-col items-center justify-center gap-6 w-[665px] scale-75'>
+            <form onSubmit={handleSubmit(submitHandler)} className='p-8 bg-richblack-800 flex flex-col items-center justify-center gap-6 w-[665px] scale-75'>
                 <div className='flex flex-col justify-center gap-[6px] w-full'>
                     <label htmlFor="lectureVideo" className='font-inter text-[#F1F2FF]'>Lecture Video<sup className='text-[#EF476F]'>*</sup></label>
-                    <ImageComponent register={register} label='lectureVideo' />
+                    <ImageComponent previewSource={previewSource} setPreviewSource={setPreviewSource} setImageFile={setImageFile} />
                 </div>
                 <div className='flex flex-col justify-center gap-[6px] w-full'>
                     <label htmlFor="lectureTitle" className='font-inter text-[#F1F2FF]'>Lecture title<sup className='text-[#EF476F]'>*</sup></label>
                     <input type="text" {...register("lectureTitle", { required: true })} className='w-full form-style' placeholder='Enter Lecture Title' />
-                    {errors.lectureTitle && <span className='text-pink-500 text-xs'>Lecture title is requiered</span>}
+                    {errors.lectureTitle && <span className='text-pink-500 text-xs'>Lecture title is required</span>}
+                </div>
+                <div className='flex flex-col justify-center gap-[6px] w-full'>
+                    <label htmlFor="timeDuration" className='font-inter text-[#F1F2FF]'>Video Playback Time<sup className='text-[#EF476F]'>*</sup></label>
+                    <div className='flex items-center justify-evenly gap-2'>
+                        <input onChange={changeHandler} type="number" className='w-full form-style' placeholder='HH' name='HH' />
+                        <input onChange={changeHandler} type="number" className='w-full form-style' placeholder='MM' name='MM' max={60} />
+                        <input onChange={changeHandler} type="number" className='w-full form-style' placeholder='SS' name='SS' max={60} />
+                    </div>
                 </div>
                 <div className='flex flex-col justify-center gap-[6px] w-full'>
                     <label htmlFor="lectureDescription">Lecture Description<sup className='text-[#EF476F]'>*</sup></label>
                     <input type="text" {...register("lectureDescription", { required: true })} className='w-full form-style' placeholder='Enter Lecture Description' />
-                    {errors.lectureDescription && <span className='text-pink-500 text-xs'>Lecture description is requiered</span>}
+                    {errors.lectureDescription && <span className='text-pink-500 text-xs'>Lecture description is required</span>}
                 </div>
                 {!view &&
                     <div className='flex items-center gap-2 justify-end w-full'>
@@ -123,4 +161,4 @@ const SubSetionModal: React.FunctionComponent<props> = ({ modalData, setModalDat
     )
 }
 
-export default SubSetionModal
+export default SubSectionModal

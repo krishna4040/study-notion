@@ -89,12 +89,15 @@ export const fetchCourseCategories = async () => {
 }
 
 // add the course details
-export const addCourseDetails = async (data: FormData, token: string) => {
+export const addCourseDetails = async (data: FormData, imageFile: File, token: string) => {
     // result has schema of course
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(CREATE_COURSE_API, data, {
+        const response = await axios.post(CREATE_COURSE_API, {
+            ...data,
+            courseImage: imageFile
+        }, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`
@@ -113,11 +116,12 @@ export const addCourseDetails = async (data: FormData, token: string) => {
 }
 
 // edit the course details
-export const editCourseDetails = async (data: any, token: string) => {
+export const editCourseDetails = async (data: FormData, token: string, imageFile: File | null = null) => {
     let result = null
     const toastId = toast.loading("Loading...")
     try {
-        const response = await axios.post(EDIT_COURSE_API, data, {
+        const postData = imageFile ? { ...imageFile, data } : data;
+        const response = await axios.post(EDIT_COURSE_API, postData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`
@@ -159,27 +163,30 @@ export const createSection = async (data: any, token: string) => {
 }
 
 // create a subsection
-export const createSubSection = async (data: any, token: string) => {
-    let result = null
-    const toastId = toast.loading("Loading...")
+export const createSubSection = async (data: any, videoFile: File, token: string) => {
+    // res have schema of section
+    let result = null;
+    const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(CREATE_SUBSECTION_API, data, {
+        const response = await axios.post(CREATE_SUBSECTION_API, {
+            ...data,
+            videoUrl: videoFile
+        }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        })
-        console.log("CREATE SUB-SECTION API RESPONSE............", response)
+        });
         if (!response?.data?.success) {
             throw new Error("Could Not Add Lecture")
         }
-        toast.success("Lecture Added")
-        result = response?.data?.data
+        toast.success("Lecture Added");
+        result = response?.data?.data;
     } catch (error: any) {
-        console.log("CREATE SUB-SECTION API ERROR............", error)
-        toast.error(error.message)
+        console.log(error);
+        toast.error(error.message);
     }
-    toast.dismiss(toastId)
-    return result
+    toast.dismiss(toastId);
+    return result;
 }
 
 // update a section

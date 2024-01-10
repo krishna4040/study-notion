@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect, MutableRefObject } from "react"
 import { AiOutlineCaretDown } from "react-icons/ai"
 import { VscDashboard, VscSignOut } from "react-icons/vsc"
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
@@ -13,7 +13,24 @@ export default function ProfileDropdown() {
     const dispatch = useAppDispatch()
     const router = useRouter()
     const [open, setOpen] = useState(false)
-    const ref = useRef(null)
+    const ref: MutableRefObject<null | HTMLDivElement> = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+        const handleLinkClick = (event: MouseEvent) => {
+            event.stopPropagation();
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        ref.current?.addEventListener("click", handleLinkClick);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            ref.current?.removeEventListener("click", handleLinkClick);
+        };
+    }, [setOpen]);
 
     if (!user) return <div></div>
 

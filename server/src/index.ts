@@ -21,13 +21,13 @@ app.use(
         credentials: true
     })
 );
-app.use(express.json());
 app.use(expressFileUpload(
     {
         useTempFiles: true,
         tempFileDir: '/temp'
     }
 ));
+app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', userRouter);

@@ -8,8 +8,7 @@ import { category } from '@/lib/types'
 import { setCourse, setStep } from '@/lib/feature/courseSlice'
 import toast from 'react-hot-toast'
 import { RxCross2 } from "react-icons/rx";
-import upload from '@/assets/Images/upload.svg'
-import Image from 'next/image'
+import ImageComponent from './ImageComponent'
 
 export interface formValues {
     courseTitle: string;
@@ -22,7 +21,7 @@ export interface formValues {
 const CourseInformationForm: React.FunctionComponent = () => {
 
     const form = useForm<formValues>();
-    const dispacth = useAppDispatch();
+    const dispatch = useAppDispatch();
 
     const { course, editCourse } = useAppSelector(state => state.course);
     const { token } = useAppSelector(state => state.auth);
@@ -37,6 +36,9 @@ const CourseInformationForm: React.FunctionComponent = () => {
     const [requirementList, setRequirementList] = useState<string[]>([]);
     const [req, setReq] = useState<string>('');
 
+    const [previewSource, setPreviewSource] = useState<string | null | ArrayBuffer>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+
     const getCategories = async () => {
         try {
             setLoading(true);
@@ -48,10 +50,11 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 setValue("coursePrice", course?.price!);
                 setValue("courseBenefits", course?.whatYouWillLearn!);
                 setValue("courseCategory", course?.category._id!);
+                setPreviewSource(course?.thumbnail!);
             }
             setLoading(false);
         } catch (error) {
-            console.log("could not fecth categories");
+            console.log("could not fetch categories");
         }
     }
 
@@ -97,56 +100,37 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 if (requirementList.toString() !== course?.instructions.toString()) {
                     formData.append("instructions", JSON.stringify(requirementList))
                 }
+                //TODO: Pls check edit course
                 if (previewSource !== course?.thumbnail) {
                     formData.append("thumbnailImage", previewSource as string);
                 }
                 setLoading(true);
-                const result = await editCourseDetails(formData, token!);
+                const result = await editCourseDetails(formData, token!, imageFile);
                 setLoading(false);
                 if (result) {
-                    dispacth(setStep(2));
-                    dispacth(setCourse(result));
+                    dispatch(setStep(2));
+                    dispatch(setCourse(result));
                 }
             } else {
                 toast.error("No changes made to the form");
             }
-            return;
         } else {
-            const formdata = new FormData();
-            formdata.append("courseName", data.courseTitle);
-            formdata.append("courseDescription", data.courseShortDesc);
-            formdata.append("price", data.coursePrice.toString());
-            formdata.append("tag", tags.toString());
-            formdata.append("instructions", requirementList.toString());
-            formdata.append("courseImage", previewSource as string);
-            formdata.append("whatYouWillLearn", data.courseBenefits);
-            formdata.append("categoryId", data.courseCategory);
+            const formData = new FormData();
+            formData.append("courseName", data.courseTitle);
+            formData.append("courseDescription", data.courseShortDesc);
+            formData.append("price", data.coursePrice.toString());
+            formData.append("tag", tags.toString());
+            formData.append("instructions", requirementList.toString());
+            formData.append("whatYouWillLearn", data.courseBenefits);
+            formData.append("categoryId", data.courseCategory);
             setLoading(true);
-            const res = await addCourseDetails(formdata, token!);
+            const res = await addCourseDetails(formData, imageFile!, token!);
             if (res) {
-                dispacth(setStep(2));
-                dispacth(setCourse(res));
+                dispatch(setStep(2));
+                dispatch(setCourse(res));
             }
             setLoading(false);
         }
-    }
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [previewSource, setPreviewSource] = useState<string | null | ArrayBuffer>(null);
-
-    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files![0];
-        if (file) {
-            const reader = new FileReader()
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setPreviewSource(reader.result as string);
-            }
-        }
-    }
-
-    const selectHandler = () => {
-        fileInputRef.current?.click();
     }
 
     return (
@@ -162,7 +146,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
                         className='w-full form-style'
                         autoComplete='off'
                     />
-                    {errors.courseTitle && <span className='text-pink-500 text-xs'>Course Title is Requiered</span>}
+                    {errors.courseTitle && <span className='text-pink-500 text-xs'>Course Title is Required</span>}
                 </div>
 
                 <div className='flex flex-col justify-center gap-[6px]'>
@@ -235,22 +219,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
 
                 <div className='flex flex-col justify-center gap-[6px]'>
                     <label htmlFor="thumbnail" className='font-inter text-[#F1F2FF]'>Course Thumbnail<sup className='text-[#EF476F]'>*</sup></label>
-                    <div className={`flex flex-col items-center justify-center w-full gap-4 px-3 py-8 border border-dashed rounded-lg form-style h-80 overflow-hidden bg-cover`} style={{
-                        backgroundImage: `url(${previewSource})`
-                    }}>
-                        <Image src={upload} alt="upload" />
-                        <p className='font-inter text-center text-sm text-[#999DAA]'>Drag and drop an image, or <span className='text-[#FFD60A] font-semibold'>Browse</span> <br /> Max 6MB each (12MB for videos)</p>
-                        <ul className='flex justify-between gap-5 list-disc list-inside itemc-center'>
-                            <li className='text-[#6E727F] font-inter font-semibold text-sm'>Aspect ratio 16:9</li>
-                            <li className='text-[#6E727F] font-inter font-semibold text-sm'>Recommended size 1024x576</li>
-                        </ul>
-                        <div className="relative rounded-md shadow-sm">
-                            <label htmlFor="file-upload" onClick={selectHandler} className="flex items-center justify-center px-4 py-2 bg-indigo-500 text-black rounded-md cursor-pointer w-fit bg-yellow-50 font-medium font-inter">
-                                Choose a File
-                            </label>
-                            <input type="file" accept=".jpg, .jpeg, .png" className="absolute hidden top-0 left-0 w-fit h-full opacity-0 cursor-pointer" onChange={changeHandler} ref={fileInputRef} />
-                        </div>
-                    </div>
+                    <ImageComponent previewSource={previewSource} setPreviewSource={setPreviewSource} setImageFile={setImageFile} />
                 </div>
 
                 <div className='flex flex-col justify-center gap-[6px]'>
@@ -295,7 +264,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 <div>
                     {
                         editCourse &&
-                        <button onClick={() => { dispacth(setStep(2)) }}>Continue without saving</button>
+                        <button onClick={() => { dispatch(setStep(2)) }}>Continue without saving</button>
                     }
                 </div>
 

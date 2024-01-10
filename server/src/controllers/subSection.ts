@@ -1,29 +1,34 @@
 import { Request, Response } from 'express'
 import Section from "../models/Section.js";
 import SubSection from "../models/SubSection.js";
-import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+import { uploadBuffer } from "../utils/bufferUploader.js";
 require('dotenv').config();
 
 export const createSubSection = async (req: Request, res: Response) => {
     try {
-        const { sectionId, title, timeDuration, description } = req.body;
-        const video = req.files?.videoFile;
-        if (!sectionId || !title || !timeDuration || !description || !video) {
+        const { sectionId, title, timeDuration, description, videoUrl } = req.body;
+
+        console.log(req.files);
+
+        if (!sectionId || !title || !timeDuration || !description || !videoUrl) {
             throw new Error('Invalid req');
         }
 
-        const uploadDetails = await uploadImageToCloudinary(video, process.env.FOLDER_NAME!);
+        const video = await uploadBuffer(videoUrl);
 
         const SubSectionDetails = await SubSection.create({
             title: title,
             timeDuration: timeDuration,
             description: description,
-            videoUrl: uploadDetails.secure_url,
+            videoUrl: video,
         });
 
         const updatedSection = await Section.findByIdAndUpdate({ _id: sectionId }, { $push: { subSection: SubSectionDetails._id } }, { new: true }).populate("subSection");
 
-        return res.status(200).json({ success: true, data: updatedSection });
+        res.status(200).json({
+            success: true,
+            data: updatedSection
+        });
     } catch (error: any) {
         return res.status(500).json({
             success: false,
