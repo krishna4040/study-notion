@@ -12,6 +12,7 @@ import { BiInfoCircle } from "react-icons/bi"
 import { HiOutlineGlobeAlt } from "react-icons/hi"
 import Modal from '@/components/common/Modal'
 import Footer from '@/components/common/Footer'
+import CourseDetailsCars from '@/components/core/Course/CourseDetailsCard';
 import Image from 'next/image'
 
 const page = ({ params }: { params: { courseId: string } }) => {
@@ -121,11 +122,11 @@ const page = ({ params }: { params: { courseId: string } }) => {
                     </div>
                     {/* Courses Card */}
                     <div className="right-[1rem] top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:translate-y-0 lg:absolute  lg:block">
-                        {/* <CourseDetailsCard
-                            course={response?.data?.courseDetails}
+                        <CourseDetailsCars
+                            course={course!}
                             setConfirmationModal={setConfirmationModal}
                             handleBuyCourse={handleBuyCourse}
-                        /> */}
+                        />
                     </div>
                 </div>
             </div>
