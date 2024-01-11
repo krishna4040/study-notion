@@ -8,14 +8,14 @@ export const createCategory = async (req: Request, res: Response) => {
         if (!name || !description) {
             throw new Error('Invalid req');
         }
-        const CategorysDetails = await Category.create({
+        const CategoryDetails = await Category.create({
             name: name,
             description: description,
         });
         return res.status(200).json({
             success: true,
             message: "Categories Created Successfully",
-            data: CategorysDetails
+            data: CategoryDetails
         });
     } catch (error: any) {
         return res.status(500).json({
@@ -30,7 +30,7 @@ export const showAllCategories = async (req: Request, res: Response) => {
         const allCategories = await Category.find({});
         res.status(200).json({
             success: true,
-            message: 'Categories fecthed',
+            message: 'Categories fetched',
             data: allCategories,
         });
     } catch (error: any) {
@@ -43,8 +43,8 @@ export const showAllCategories = async (req: Request, res: Response) => {
 
 export const categoryPageDetails = async (req: Request, res: Response) => {
     try {
-        const { categoryId } = req.body;
-        const selectedCategory = await Category.findById(categoryId).populate("courses").exec();
+        const { categoryName } = req.params;
+        const selectedCategory = await Category.findOne({ name: categoryName }).populate("courses").exec();
         if (!selectedCategory) {
             throw new Error('Category not found');
         }
@@ -52,10 +52,8 @@ export const categoryPageDetails = async (req: Request, res: Response) => {
             throw new Error('No courses for selected category');
         }
 
-        const selectedCourses = selectedCategory.courses;
-
         // Get courses for other categories
-        const categoriesExceptSelected = await Category.find({ _id: { $ne: categoryId } }).populate("courses");
+        const categoriesExceptSelected = await Category.find({ name: { $ne: categoryName } }).populate("courses");
         let differentCourses = [];
         for (const category of categoriesExceptSelected) {
             differentCourses.push(...category.courses);
@@ -68,9 +66,9 @@ export const categoryPageDetails = async (req: Request, res: Response) => {
 
         res.status(200).json({
             success: true,
-            message: 'req data fecthed',
+            message: 'req data fetched',
             data: {
-                selectedCourses: selectedCourses,
+                selectedCourses: selectedCategory,
                 differentCourses: differentCourses,
                 mostSellingCourses: mostSellingCourses,
             }
