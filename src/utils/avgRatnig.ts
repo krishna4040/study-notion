@@ -1,12 +1,12 @@
-export default function GetAvgRating(ratingArr: Array<any>) {
-    if (ratingArr?.length === 0) return 0
+import { RatingAndReview } from "@/lib/types"
+
+export default function GetAvgRating(ratingArr: Array<RatingAndReview>) {
+    if (ratingArr?.length === 0) return 0;
     const totalReviewCount = ratingArr?.reduce((acc, curr) => {
-        acc += curr.rating
-        return acc
-    }, 0)
-
-    const multiplier = Math.pow(10, 1)
-    const avgReviewCount = Math.round((totalReviewCount / ratingArr?.length) * multiplier) / multiplier
-
-    return avgReviewCount
+        acc += curr.rating;
+        return acc;
+    }, 0);
+    const multiplier = Math.pow(10, 1);
+    const avgReviewCount = Math.round((totalReviewCount / ratingArr?.length) * multiplier) / multiplier;
+    return avgReviewCount;
 }

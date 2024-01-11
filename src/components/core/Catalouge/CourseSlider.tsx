@@ -14,7 +14,18 @@ const CourseSlider = ({ courses }: { courses: course[] }) => {
         <div>
             {
                 courses.length &&
-                <Swiper>
+                <Swiper
+                    slidesPerView={1}
+                    spaceBetween={25}
+                    loop={true}
+                    modules={[FreeMode, Pagination]}
+                    breakpoints={{
+                        1024: {
+                            slidesPerView: 3,
+                        },
+                    }}
+                    className="max-h-[30rem]"
+                >
                     {
                         courses.map((course, idx) => {
                             return <SwiperSlide key={idx}><CourseCard course={course} /></SwiperSlide>

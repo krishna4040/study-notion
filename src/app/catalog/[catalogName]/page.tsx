@@ -4,6 +4,7 @@ import { course, category } from '@/lib/types';
 import Footer from '@/components/common/Footer'
 import CourseCard from '@/components/core/Catalouge/CourseCard';
 import CourseSlider from '@/components/core/Catalouge/CourseSlider'
+import Tab from '@/components/core/Catalouge/Tab'
 
 const getCatalogPageData = async (categoryName: string) => {
     try {
@@ -28,34 +29,31 @@ const page = async ({ params }: { params: { catalogName: string } }) => {
     const mostSellingCourses: course[] = catalogPageData.mostSellingCourses;
 
     return (
-        <div className='text-white'>
+        <div className='box-content bg-richblack-800 px-4'>
 
-            <div>
-                <p>Home / Catalog / <span>{selectedCategory.name}</span></p>
-                <p>{selectedCategory.name}</p>
-                <p>{selectedCategory.description}</p>
+            <div className='mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent '>
+                <p className='text-sm text-richblack-300'>Home / Catalog / <span className='text-yellow-25'>{selectedCategory.name}</span></p>
+                <p className='text-3xl text-richblack-5'>{selectedCategory.name}</p>
+                <p className="max-w-[870px] text-richblack-200">{selectedCategory.description}</p>
             </div>
 
-            <div>
+            <div className="box-content w-full px-4 py-12 mx-auto  max-w-maxContentTab lg:max-w-maxContent">
 
-                <div>
+                <div className="section_heading">
                     <div>Courses To Get You Started</div>
-                    <div>
-                        <p>Most popular</p>
-                        <p>New</p>
-                    </div>
+                    <Tab />
                     <CourseSlider courses={selectedCategory.courses} />
                 </div>
 
-                <div>
-                    <p>Top Courses</p>
-                    <CourseSlider courses={differentCourses} />
+                <div className="box-content w-full px-4 py-12 mx-auto max-w-maxContentTab lg:max-w-maxContent">
+                    <p className="section_heading">Top Courses</p>
+                    <div className='py-8'><CourseSlider courses={differentCourses} /></div>
                 </div>
 
-                <div>
-                    <div>Frequently Brought</div>
+                <div className="box-content w-full px-4 py-12 mx-auto max-w-maxContentTab lg:max-w-maxContent">
+                    <div className="section_heading">Frequently Brought</div>
                     <div className='py-8'>
-                        <div className='grid grid-cols-1 lg:grid-cols-2'>
+                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                             {
                                 mostSellingCourses.slice(0, 4).map((course, idx) => {
                                     return <CourseCard key={idx} course={course} />

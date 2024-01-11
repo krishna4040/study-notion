@@ -3,6 +3,8 @@ import toast from 'react-hot-toast';
 import { courseEndpoints } from '@/services/api'
 import { resetCart } from '@/lib/feature/cartSlice';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { user } from '@/lib/types';
+import { AppDispatch } from '@/lib/store';
 
 const { COURSE_PAYMENT_API } = courseEndpoints;
 
@@ -51,7 +53,7 @@ const verifyPayment = async (data, token: string, router: AppRouterInstance, dis
     }
 }
 
-export const buyCourse = async (courses: string[], token: string) => {
+export const buyCourse = async (courses: string[], token: string, user: user, dispatch: AppDispatch, router: AppRouterInstance) => {
     const toastId = toast.loading('loading...');
     try {
         const res = await loadScript("");
