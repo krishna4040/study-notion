@@ -123,7 +123,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
             formData.append("instructions", requirementList.toString());
             formData.append("whatYouWillLearn", data.courseBenefits);
             formData.append("categoryId", data.courseCategory);
-            formData.append("courseImage", previewSource as string);
+            formData.append("courseImage", imageFile!, imageFile?.name);
             setLoading(true);
             const res = await addCourseDetails(formData, token!);
             if (res) {

@@ -1,35 +1,37 @@
 import { Request, Response } from 'express'
 import Section from "../models/Section.js";
 import SubSection from "../models/SubSection.js";
-import { uploadBuffer } from "../utils/bufferUploader.js";
+import { uploadImageToCloudinary } from '../utils/imageUploader.js';
+import { UploadedFile } from 'express-fileupload';
 require('dotenv').config();
 
 export const createSubSection = async (req: Request, res: Response) => {
     try {
-        const { sectionId, title, timeDuration, description, videoUrl } = req.body;
 
-        console.log(req.files);
+        const { sectionId, title, timeDuration, description } = req.body;
+        const { video } = req.files!;
 
-        if (!sectionId || !title || !timeDuration || !description || !videoUrl) {
+        if (!sectionId || !title || !timeDuration || !description || !video) {
             throw new Error('Invalid req');
         }
 
-        const video = await uploadBuffer(videoUrl);
+        const videoUrl = (await uploadImageToCloudinary(video as UploadedFile, process.env.FOLDER!)).secure_url;
 
         const SubSectionDetails = await SubSection.create({
             title: title,
             timeDuration: timeDuration,
             description: description,
-            videoUrl: video,
+            videoUrl,
         });
 
-        const updatedSection = await Section.findByIdAndUpdate({ _id: sectionId }, { $push: { subSection: SubSectionDetails._id } }, { new: true }).populate("subSection");
+        const updatedSection = await Section.findByIdAndUpdate(sectionId, { $push: { subSection: SubSectionDetails._id } }, { new: true }).populate("subSection");
 
         res.status(200).json({
             success: true,
             data: updatedSection
         });
     } catch (error: any) {
+        console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message
@@ -61,18 +63,19 @@ export const updateSubSection = async (req: Request, res: Response) => {
 
 export const deleteSubSection = async (req: Request, res: Response) => {
     try {
-        const { subSectionId } = req.body;
+        const { subSectionId, sectionId } = req.query;
         if (!subSectionId) {
             throw new Error('Invalid req');
         }
-        await SubSection.findByIdAndDelete({ id: subSectionId });
-        const section = await Section.findOneAndDelete({ subSection: subSectionId }, { new: true });
+        await SubSection.findByIdAndDelete(subSectionId);
+        const section = await Section.findByIdAndUpdate(sectionId, { $pull: { subSection: subSectionId } }, { new: true });
         res.status(200).json({
             success: true,
             data: section,
-            message: 'sub section deleted succsesfully'
+            message: 'sub section deleted successfully'
         });
     } catch (error: any) {
+        console.log(error);
         res.status(500).json({
             success: false,
             message: error.message

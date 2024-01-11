@@ -101,22 +101,24 @@ const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalDa
             }
         } else {
             const formData = new FormData();
-            formData.append("sectionId", modalData.sectionId);
+            formData.append("sectionId", modalData);
             formData.append("title", data.lectureTitle);
             formData.append("description", data.lectureDescription);
             formData.append("timeDuration", timeDuration.total);
-            formData.append("videoUrl", previewSource as string);
+            formData.append("video", imageFile!, imageFile?.name);
             setLoading(true);
             const res = await createSubSection(formData, token!);
             const updatedCourse = { ...course, courseContent: res };
+            console.log(updatedCourse);
             dispatch(setCourse(updatedCourse as course));
+            setModalData(null);
             setLoading(false);
         }
     }
 
     return (
         <div className='fixed inset-0 z-[1000] pt-6 !mt-0 flex flex-col items-center justify-center  overflow-auto bg-white bg-opacity-10 backdrop-blur-sm h-[756px] '>
-            <div className='flex py-4 px-6 items-center justify-between bg-richblack-600 border border-richblack-600 w-[665px] scale-75 -mb-[7.5rem]'>
+            <div className='flex py-4 px-6 items-center justify-between bg-richblack-600 border border-richblack-600 w-[665px] scale-75 -mb-[7.25rem]'>
                 <h2>
                     {add && "Adding"}
                     {view && "Viewing"}

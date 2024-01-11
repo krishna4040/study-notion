@@ -7,6 +7,7 @@ import { section } from '../models/Section.js';
 import { convertSecondsToDuration } from '../utils/secToDuration.js'
 import CourseProgress from '../models/CourseProgress.js';
 import { subSection } from '../models/SubSection.js';
+import { UploadedFile } from 'express-fileupload';
 require('dotenv').config();
 
 export const updateProfile = async (req: Request, res: Response) => {
@@ -84,7 +85,7 @@ export const updateDisplayPicture = async (req: Request, res: Response) => {
             throw new Error('Invalid req');
         }
         const profilePicture = req.files?.dp;
-        const upload = uploadImageToCloudinary(profilePicture, process.env.FOLDER_NAME!);
+        const upload = uploadImageToCloudinary(profilePicture as UploadedFile, process.env.FOLDER_NAME!);
         await User.findByIdAndUpdate(id, { image: (await upload).secure_url });
         res.status(200).json({
             success: true,
@@ -120,7 +121,7 @@ export const getEnrolledCourses = async (req: Request, res: Response) => {
 
             for (let j = 0; j < courseContent.length; j++) {
                 const section: section = courseContent[j];
-                totalDurationInSeconds += section.subSection.reduce((acc: number, curr: subSection) => acc + parseInt(curr.timeDuration!), 0)
+                // totalDurationInSeconds += section.subSection.reduce((acc: number, curr: subSection) => acc + parseInt(curr.timeDuration!), 0)
                 enrolledCourses[i].totalDuration = convertSecondsToDuration(totalDurationInSeconds);
                 SubsectionLength += courseContent[j].subSection.length
             }

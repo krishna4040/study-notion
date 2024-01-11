@@ -7,14 +7,15 @@ import Section, { section } from '../models/Section'
 import SubSection from '../models/SubSection'
 import CourseProgress from '../models/CourseProgress'
 import { convertSecondsToDuration } from '../utils/secToDuration'
-import { uploadBuffer } from '../utils/bufferUploader'
+import { UploadedFile } from 'express-fileupload'
 require('dotenv').config();
 
 // Function to create a new course
 export const createCourse = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
-        let { courseName, courseDescription, whatYouWillLearn, price, tag, categoryId, status, instructions, courseImage } = req.body;
+        let { courseName, courseDescription, whatYouWillLearn, price, tag, categoryId, status, instructions } = req.body;
+        const { courseImage } = req.files!;
 
         if (!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !courseImage || !categoryId) {
             throw new Error('Invalid req');
@@ -27,8 +28,7 @@ export const createCourse = async (req: Request, res: Response) => {
         if (!categoryDetails) {
             throw new Error('Category details not found');
         }
-        const thumbnailImage = await uploadBuffer(courseImage);
-        console.log(thumbnailImage);
+        const thumbnail = (await uploadImageToCloudinary(courseImage as UploadedFile, process.env.FOLDER!)).secure_url;
 
         const newCourse = await Course.create({
             courseName,
@@ -38,7 +38,7 @@ export const createCourse = async (req: Request, res: Response) => {
             price,
             tag: tag,
             category: categoryDetails._id,
-            thumbnail: thumbnailImage,
+            thumbnail,
             status: status,
             instructions: instructions,
         });
@@ -161,7 +161,7 @@ export const editCourse = async (req: Request, res: Response) => {
 
         if (req.files) {
             const thumbnail = req.files.thumbnailImage;
-            const thumbnailImage = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME!);
+            const thumbnailImage = await uploadImageToCloudinary(thumbnail as UploadedFile, process.env.FOLDER_NAME!);
             course.thumbnail = thumbnailImage.secure_url;
         }
 

@@ -60,8 +60,8 @@ const CourseBuilderForm = () => {
     const handleDeleteSubSection = async (subSectionId: string, sectionId: string) => {
         const res = await deleteSubSection({ subSectionId, sectionId }, token!);
         if (res) {
-            // const updatedCourse = {...course, courseContent: course?.courseContent.map(sec => sec._id === sectionId ? res : sec)}
-            // dispatch(setCourse(updatedCourse));
+            const updatedCourse: any = { ...course, courseContent: course?.courseContent.map(sec => sec._id === sectionId ? res : sec) }
+            dispatch(setCourse(updatedCourse));
         }
         setConfirmationModal(null);
     }
@@ -88,7 +88,7 @@ const CourseBuilderForm = () => {
                     // Nested view
                     <div className='px-6 bg-richblack-700 border rounded-lg border-richblack-600'>
                         {
-                            course?.courseContent.map(section => {
+                            course?.courseContent && course.courseContent.length > 0 && course?.courseContent.map(section => {
                                 return (
                                     <details key={section._id} open>
                                         <summary className='flex items-center justify-between py-3'>
@@ -114,15 +114,15 @@ const CourseBuilderForm = () => {
                                         </summary>
                                         <div>
                                             {
-                                                section.subSection.map(sub => {
+                                                section.subSection && section.subSection.length > 0 && section.subSection.map(sub => {
                                                     return (
-                                                        <div key={sub._id} onClick={() => { setViewSubSection(sub) }} className='border-b py-3 pl-6'>
-                                                            <div>
-                                                                <RxDropdownMenu />
-                                                                <p>{sub.title}</p>
+                                                        <div key={sub._id} onClick={() => { setViewSubSection(sub) }} className='border-b py-3 pl-6 flex items-center justify-between'>
+                                                            <div className='flex items-center gap-2'>
+                                                                <RxDropdownMenu className='text-xl text-richblack-400' />
+                                                                <p className='font-semibold font-inter text-richblack-50'>{sub.title}</p>
                                                             </div>
-                                                            <div onClick={(e) => { e.stopPropagation() }}>
-                                                                <button onClick={() => { setEditSubSection({ ...sub, sectionId: section._id }) }}><MdModeEditOutline /></button>
+                                                            <div onClick={(e) => { e.stopPropagation() }} className='flex items-center gap-2'>
+                                                                <button onClick={() => { setEditSubSection({ ...sub, sectionId: section._id }) }}><MdModeEditOutline className='text-xl text-richblack-400' /></button>
                                                                 <button onClick={() => {
                                                                     setConfirmationModal({
                                                                         text1: "Delete this sub section",
@@ -133,7 +133,7 @@ const CourseBuilderForm = () => {
                                                                         btn2Handler: () => { setConfirmationModal(null) }
                                                                     })
                                                                 }}>
-                                                                    <RiDeleteBinFill />
+                                                                    <RiDeleteBinFill className='text-xl text-richblack-400' />
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -156,15 +156,15 @@ const CourseBuilderForm = () => {
                 <button onClick={() => {
                     dispatch(setEditCourse(true));
                     dispatch(setStep(1));
-                }} className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5'>
+                }} className='bg-richblack-800 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5'>
                     Back
                 </button>
 
                 <button onClick={() => {
-                    if (course?.courseContent.length === 0 || course?.courseContent.some(section => section.subSection.length === 0)) {
-                        toast.error("Add at least one section or subsection");
-                        return;
-                    }
+                    // if (course?.courseContent.length === 0 || course?.courseContent.some(section => section.subSection.length === 0)) {
+                    //     toast.error("Add at least one section or subsection");
+                    //     return;
+                    // }
                     dispatch(setStep(3));
                 }} className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black'>
                     Next

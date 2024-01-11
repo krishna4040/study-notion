@@ -166,6 +166,7 @@ export const createSubSection = async (data: any, token: string) => {
     try {
         const response = await axios.post(CREATE_SUBSECTION_API, data, {
             headers: {
+                "content-type": "multipart/form-data",
                 Authorization: `Bearer ${token}`
             }
         });
@@ -228,10 +229,12 @@ export const updateSubSection = async (data: any, token: string) => {
 
 // delete a section
 export const deleteSection = async (data: any, token: string) => {
+    // res have schema of course
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(DELETE_SECTION_API, data, {
+        const { sectionId, courseId } = data;
+        const response = await axios.delete(`${DELETE_SECTION_API}?sectionId=${sectionId}&courseId=${courseId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -239,7 +242,7 @@ export const deleteSection = async (data: any, token: string) => {
         if (!response?.data?.success) {
             throw new Error("Could Not Delete Section");
         }
-        toast.success("Course Section Deleted");
+        toast.success("Section Deleted");
         result = response?.data?.data;
     } catch (error: any) {
         toast.error(error.message);
@@ -253,7 +256,8 @@ export const deleteSubSection = async (data: any, token: string) => {
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(DELETE_SUBSECTION_API, data, {
+        const { sectionId, subSectionId } = data;
+        const response = await axios.delete(`${DELETE_SUBSECTION_API}?sectionId=${sectionId}&subSectionId=${subSectionId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

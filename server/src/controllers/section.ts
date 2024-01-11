@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import Section from "../models/Section"
 import Course from "../models/Course"
+import SubSection from '../models/SubSection';
 
 export const createSection = async (req: Request, res: Response) => {
     try {
@@ -55,13 +56,22 @@ export const updateSection = async (req: Request, res: Response) => {
 
 export const deleteSection = async (req: Request, res: Response) => {
     try {
-        const { sectionId } = req.params;
+        const { sectionId, courseId } = req.query;
+        const section = await Section.findById(sectionId);
+        if (section?.subSection.length) {
+            section?.subSection.forEach(async sub => {
+                await SubSection.findByIdAndDelete(sub);
+            })
+        }
         await Section.findByIdAndDelete(sectionId);
+        const course = await Course.findByIdAndUpdate(courseId, { $pull: { courseContent: sectionId } }, { new: true });
         res.status(200).json({
             success: true,
             message: "Section deleted",
+            data: course
         });
     } catch (error: any) {
+        console.log(error);
         res.status(500).json({
             success: false,
             message: error.message,
