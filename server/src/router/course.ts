@@ -51,7 +51,7 @@ router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 // Category can Only be Created by Admin
 router.post("/createCategory", auth, isAdmin, createCategory)
 router.get("/showAllCategories", showAllCategories)
-router.get("/getCategoryPageDetails/:CategoryName", categoryPageDetails)
+router.get("/getCategoryPageDetails/:categoryName", categoryPageDetails)
 
 // ********************************************************************************************************
 //                                      Rating and Review

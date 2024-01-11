@@ -21,23 +21,23 @@ const Navbar = () => {
         return pathname === route;
     }
 
-    // state fecthing
+    // state fetching
     const { token } = useAppSelector(state => state.auth);
     const { user } = useAppSelector(state => state.profile);
     const { totalItems } = useAppSelector(state => state.cart);
 
     // api call
     const [subLinks, setSubLinks] = useState<Array<category>>([]);
-    const fecthSubLinks = async () => {
+    const fetchSubLinks = async () => {
         try {
             const result = await axios.get(categories.CATEGORIES_API);
             setSubLinks(result?.data?.data);
         } catch (error: any) {
-            console.log('could not fecth categories list');
+            console.log('could not fetch categories list');
         }
     };
     useEffect(() => {
-        fecthSubLinks();
+        fetchSubLinks();
     }, []);
 
     return (
@@ -68,7 +68,7 @@ const Navbar = () => {
                                                     {
                                                         !subLinks.length ? <div></div> :
                                                             subLinks.map((ele, idx) => {
-                                                                return <Link href={`/catalouge/${ele.name}`} key={idx}><p className='p-3 text-lg font-semibold rounded-md hover:bg-richblack-100'>{ele.name}</p></Link>
+                                                                return <Link href={`/catalog/${ele.name}`} key={idx}><p className='p-3 text-lg font-semibold rounded-md hover:bg-richblack-100'>{ele.name}</p></Link>
                                                             })
                                                     }
                                                 </div>
@@ -85,7 +85,7 @@ const Navbar = () => {
 
                 </ul>
 
-                {/* Login/signup/dashboard/logout/cart/search/dp */}
+                {/* Login/sign-up/dashboard/logout/cart/search/dp */}
                 <div className='flex items-center justify-center gap-3'>
                     {
                         token && user && user?.accountType != 'Instructor' &&

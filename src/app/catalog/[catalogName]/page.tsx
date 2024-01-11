@@ -7,7 +7,7 @@ import CourseSlider from '@/components/core/Catalouge/CourseSlider'
 
 const getCatalogPageData = async (categoryName: string) => {
     try {
-        const { data } = await axios.get(`/getCategoryPageDetails/${categoryName}`);
+        const { data } = await axios.get(`http://localhost:8000/api/course/getCategoryPageDetails/${categoryName}`);
         return data.data;
     } catch (error) {
         console.log(error);
@@ -18,6 +18,10 @@ const page = async ({ params }: { params: { catalogName: string } }) => {
 
     const { catalogName } = params;
     const catalogPageData = await getCatalogPageData(catalogName);
+
+    if (!catalogPageData) {
+        return <div>Error fetching catalog page data</div>;
+    }
 
     const selectedCategory: category = catalogPageData.selectedCourses;
     const differentCourses: course[] = catalogPageData.differentCourses;

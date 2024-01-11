@@ -1,8 +1,15 @@
 import React from 'react'
 
 const page = () => {
+
+    const handleBuyCourse = async () => {
+
+    }
+
     return (
-        <div>page</div>
+        <div>
+            <button onClick={handleBuyCourse}>Buy Now</button>
+        </div>
     )
 }
 
