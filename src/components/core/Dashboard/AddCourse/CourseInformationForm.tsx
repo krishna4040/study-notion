@@ -105,7 +105,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
                     formData.append("thumbnailImage", previewSource as string);
                 }
                 setLoading(true);
-                const result = await editCourseDetails(formData, token!, imageFile);
+                const result = await editCourseDetails(formData, token!);
                 setLoading(false);
                 if (result) {
                     dispatch(setStep(2));
@@ -123,8 +123,9 @@ const CourseInformationForm: React.FunctionComponent = () => {
             formData.append("instructions", requirementList.toString());
             formData.append("whatYouWillLearn", data.courseBenefits);
             formData.append("categoryId", data.courseCategory);
+            formData.append("courseImage", previewSource as string);
             setLoading(true);
-            const res = await addCourseDetails(formData, imageFile!, token!);
+            const res = await addCourseDetails(formData, token!);
             if (res) {
                 dispatch(setStep(2));
                 dispatch(setCourse(res));

@@ -89,15 +89,12 @@ export const fetchCourseCategories = async () => {
 }
 
 // add the course details
-export const addCourseDetails = async (data: FormData, imageFile: File, token: string) => {
+export const addCourseDetails = async (data: FormData, token: string) => {
     // result has schema of course
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(CREATE_COURSE_API, {
-            ...data,
-            courseImage: imageFile
-        }, {
+        const response = await axios.post(CREATE_COURSE_API, data, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`
@@ -116,12 +113,11 @@ export const addCourseDetails = async (data: FormData, imageFile: File, token: s
 }
 
 // edit the course details
-export const editCourseDetails = async (data: FormData, token: string, imageFile: File | null = null) => {
+export const editCourseDetails = async (data: FormData, token: string) => {
     let result = null
     const toastId = toast.loading("Loading...")
     try {
-        const postData = imageFile ? { ...imageFile, data } : data;
-        const response = await axios.post(EDIT_COURSE_API, postData, {
+        const response = await axios.post(EDIT_COURSE_API, data, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`
@@ -163,15 +159,12 @@ export const createSection = async (data: any, token: string) => {
 }
 
 // create a subsection
-export const createSubSection = async (data: any, videoFile: File, token: string) => {
+export const createSubSection = async (data: any, token: string) => {
     // res have schema of section
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(CREATE_SUBSECTION_API, {
-            ...data,
-            videoUrl: videoFile
-        }, {
+        const response = await axios.post(CREATE_SUBSECTION_API, data, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

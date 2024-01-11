@@ -105,8 +105,9 @@ const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalDa
             formData.append("title", data.lectureTitle);
             formData.append("description", data.lectureDescription);
             formData.append("timeDuration", timeDuration.total);
+            formData.append("videoUrl", previewSource as string);
             setLoading(true);
-            const res = await createSubSection(formData, imageFile!, token!);
+            const res = await createSubSection(formData, token!);
             const updatedCourse = { ...course, courseContent: res };
             dispatch(setCourse(updatedCourse as course));
             setLoading(false);
@@ -114,8 +115,8 @@ const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalDa
     }
 
     return (
-        <div className='fixed inset-0 z-[1000] !mt-0 flex flex-col items-center justify-center  overflow-auto bg-white bg-opacity-10 backdrop-blur-sm h-[756px]'>
-            <div className='flex py-4 px-6 items-center justify-between bg-richblack-600 border border-richblack-600 w-[665px] scale-75 -mb-24'>
+        <div className='fixed inset-0 z-[1000] pt-6 !mt-0 flex flex-col items-center justify-center  overflow-auto bg-white bg-opacity-10 backdrop-blur-sm h-[756px] '>
+            <div className='flex py-4 px-6 items-center justify-between bg-richblack-600 border border-richblack-600 w-[665px] scale-75 -mb-[7.5rem]'>
                 <h2>
                     {add && "Adding"}
                     {view && "Viewing"}
@@ -126,7 +127,7 @@ const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalDa
             <form onSubmit={handleSubmit(submitHandler)} className='p-8 bg-richblack-800 flex flex-col items-center justify-center gap-6 w-[665px] scale-75'>
                 <div className='flex flex-col justify-center gap-[6px] w-full'>
                     <label htmlFor="lectureVideo" className='font-inter text-[#F1F2FF]'>Lecture Video<sup className='text-[#EF476F]'>*</sup></label>
-                    <ImageComponent previewSource={previewSource} setPreviewSource={setPreviewSource} setImageFile={setImageFile} />
+                    <ImageComponent previewSource={previewSource} setPreviewSource={setPreviewSource} setImageFile={setImageFile} isVideo={true} />
                 </div>
                 <div className='flex flex-col justify-center gap-[6px] w-full'>
                     <label htmlFor="lectureTitle" className='font-inter text-[#F1F2FF]'>Lecture title<sup className='text-[#EF476F]'>*</sup></label>
@@ -148,7 +149,10 @@ const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalDa
                 </div>
                 {!view &&
                     <div className='flex items-center gap-2 justify-end w-full'>
-                        <button type='button' className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5'>
+                        <button type='button' className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5' onClick={() => {
+                            setPreviewSource(null);
+                            setModalData(null);
+                        }}>
                             Cancel
                         </button>
                         <button className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black'>
