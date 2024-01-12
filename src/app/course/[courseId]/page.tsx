@@ -1,7 +1,7 @@
 'use client'
 import { modalData } from '@/components/common/Modal';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { course } from '@/lib/types';
+import { course, section } from '@/lib/types';
 import { fetchCourseDetails } from '@/services/opr/course';
 import { buyCourse } from '@/services/opr/payment';
 import GetAvgRating from '@/utils/avgRatnig';
@@ -33,6 +33,10 @@ const page = ({ params }: { params: { courseId: string } }) => {
         setCourse(res);
     }
 
+    useEffect(() => {
+        fetchCourse();
+    }, []);
+
     const handleBuyCourse = () => {
         if (token) {
             buyCourse([courseId], token, user!, dispatch, router);
@@ -44,7 +48,7 @@ const page = ({ params }: { params: { courseId: string } }) => {
             btn1Text: "Login",
             btn2Text: "Cancel",
             btn1Handler: () => router.push("/login"),
-            btn2Handler: () => setConfirmationModal(null),
+            btn2Handler: () => setConfirmationModal(null)
         });
     }
 
@@ -52,20 +56,16 @@ const page = ({ params }: { params: { courseId: string } }) => {
         return <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center"><div className="spinner"></div></div>
     }
 
-    const {
-        courseName,
-        courseDescription,
-        thumbnail,
-        price,
-        whatYouWillLearn,
-        courseContent,
-        ratingAndReviews,
-        instructor,
-        studentsEnrolled,
-    } = course!;
-
+    const calculateTotalLectures = (sections: section[]): number => {
+        let totalLect = 0;
+        sections.forEach(sec => {
+            totalLect += sec.subSection.length;
+        });
+        return totalLect;
+    }
 
     return (
+        course &&
         <>
             <div className={`relative w-full bg-richblack-800`}>
                 {/* Hero Section */}
@@ -73,30 +73,30 @@ const page = ({ params }: { params: { courseId: string } }) => {
                     <div className="mx-auto grid min-h-[450px] max-w-maxContentTab justify-items-center py-8 lg:mx-0 lg:justify-items-start lg:py-0 xl:max-w-[810px]">
                         <div className="relative block max-h-[30rem] lg:hidden">
                             <div className="absolute bottom-0 left-0 h-full w-full shadow-[#161D29_0px_-64px_36px_-28px_inset]"></div>
-                            <img
-                                src={thumbnail}
+                            <Image
+                                src={course?.thumbnail!}
                                 alt="course thumbnail"
+                                height={250}
+                                width={250}
                                 className="aspect-auto w-full"
                             />
                         </div>
-                        <div
-                            className={`z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-richblack-5`}
-                        >
+                        <div className={`z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-richblack-5`}>
                             <div>
                                 <p className="text-4xl font-bold text-richblack-5 sm:text-[42px]">
-                                    {courseName}
+                                    {course?.courseName}
                                 </p>
                             </div>
-                            <p className={`text-richblack-200`}>{courseDescription}</p>
+                            <p className={`text-richblack-200`}>{course?.courseDescription}</p>
                             <div className="text-md flex flex-wrap items-center gap-2">
                                 <span className="text-yellow-25">{avgReviewCount}</span>
                                 <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
-                                <span>{`(${ratingAndReviews.length} reviews)`}</span>
-                                <span>{`${studentsEnrolled.length} students enrolled`}</span>
+                                <span>{`(${course?.ratingAndReviews.length} reviews)`}</span>
+                                <span>{`${course?.studentsEnrolled.length} students enrolled`}</span>
                             </div>
                             <div>
                                 <p className="">
-                                    Created By {`${instructor.firstName} ${instructor.lastName}`}
+                                    Created By {`${course?.instructor.firstName} ${course?.instructor.lastName}`}
                                 </p>
                             </div>
                             <div className="flex flex-wrap gap-5 text-lg">
@@ -112,7 +112,7 @@ const page = ({ params }: { params: { courseId: string } }) => {
                         </div>
                         <div className="flex w-full flex-col gap-4 border-y border-y-richblack-500 py-4 lg:hidden">
                             <p className="space-x-3 pb-4 text-3xl font-semibold text-richblack-5">
-                                Rs. {price}
+                                Rs. {course?.price}
                             </p>
                             <button className="yellowButton" onClick={handleBuyCourse}>
                                 Buy Now
@@ -147,12 +147,12 @@ const page = ({ params }: { params: { courseId: string } }) => {
                             <div className="flex flex-wrap justify-between gap-2">
                                 <div className="flex gap-2">
                                     <span>
-                                        {courseContent.length} {`section(s)`}
+                                        {course?.courseContent.length} {`section(s)`}
                                     </span>
                                     <span>
-                                        {/* {totalNoOfLectures} {`lecture(s)`} */}
+                                        {course?.courseContent.length && calculateTotalLectures(course?.courseContent!)} {`lecture(s)`}
                                     </span>
-                                    {/* <span>{totalDuration} total length</span> */}
+                                    <span>{course?.totalDuration} total length</span>
                                 </div>
                                 <div>
                                     <button
@@ -182,14 +182,16 @@ const page = ({ params }: { params: { courseId: string } }) => {
                             <p className="text-[28px] font-semibold">Author</p>
                             <div className="flex items-center gap-4 py-4">
                                 <Image
-                                    src={instructor.image}
+                                    height={250}
+                                    width={250}
+                                    src={course?.instructor.image!}
                                     alt="Author"
                                     className="h-14 w-14 rounded-full object-cover"
                                 />
-                                <p className="text-lg">{`${instructor.firstName} ${instructor.lastName}`}</p>
+                                <p className="text-lg">{`${course?.instructor.firstName} ${course?.instructor.lastName}`}</p>
                             </div>
                             <p className="text-richblack-50">
-                                {instructor?.additionalDetails?.about}
+                                {course?.instructor?.additionalDetails?.about}
                             </p>
                         </div>
                     </div>
@@ -198,7 +200,6 @@ const page = ({ params }: { params: { courseId: string } }) => {
             <Footer />
             {confirmationModal && <Modal modalData={confirmationModal} />}
         </>
-
     )
 }
 

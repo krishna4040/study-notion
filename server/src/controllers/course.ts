@@ -5,7 +5,6 @@ import User from "../models/User"
 import { uploadImageToCloudinary } from "../utils/imageUploader"
 import Section, { section } from '../models/Section'
 import SubSection from '../models/SubSection'
-import CourseProgress from '../models/CourseProgress'
 import { convertSecondsToDuration } from '../utils/secToDuration'
 import { UploadedFile } from 'express-fileupload'
 import { convertToSeconds } from '../utils/timeStringTosec'
@@ -45,7 +44,7 @@ export const createCourse = async (req: Request, res: Response) => {
         });
 
         await User.findByIdAndUpdate({ _id: userId, }, { $push: { courses: newCourse._id, } });
-        await Category.findByIdAndUpdate(categoryId, { $push: { course: newCourse._id } });
+        await Category.findByIdAndUpdate(categoryId, { $push: { courses: newCourse._id } });
 
         res.status(200).json({
             success: true,
@@ -80,8 +79,24 @@ export const getAllCourses = async (req: Request, res: Response) => {
 export const getCourseDetails = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.params;
-        const userId = req.user?.id;
         const course = await Course.findOne({ _id: courseId })
+            .populate<{ courseContent: section[] }>({ path: "courseContent", populate: "subSection" })
+            .exec();
+        if (!course) {
+            throw new Error('Course not found');
+        }
+
+        let totalDurationInSeconds = 0, subSectionLength = 0;
+        course.courseContent.forEach(content => {
+            content.subSection.forEach((subSection: any) => {
+                totalDurationInSeconds += convertToSeconds(subSection.timeDuration);
+            });
+            subSectionLength += content.subSection.length;
+        });
+
+        const updatedCourse = await Course.findByIdAndUpdate(courseId, {
+            totalDuration: convertSecondsToDuration(totalDurationInSeconds)
+        }, { new: true })
             .populate({
                 path: "instructor",
                 populate: {
@@ -97,38 +112,18 @@ export const getCourseDetails = async (req: Request, res: Response) => {
                 }
             })
             .exec();
-        if (!course) {
-            throw new Error('Course not found');
-        }
-
-        let courseProgressCount = await CourseProgress.findOne({
-            courseID: courseId,
-            userId: userId,
-        });
-
-        let totalDurationInSeconds = 0;
-        course.courseContent.forEach(content => {
-            content.subSection.forEach((subSection: any) => {
-                const timeDurationInSeconds = convertToSeconds(subSection.timeDuration);
-                totalDurationInSeconds += timeDurationInSeconds;
-            });
-        });
-        const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
 
         res.status(200).json({
             success: true,
             message: 'Course details fetched successfully',
-            data: {
-                course,
-                totalDuration,
-                completedVideos: courseProgressCount?.completedVideos ? courseProgressCount?.completedVideos : []
-            }
+            data: updatedCourse
         });
     } catch (error: any) {
         res.status(500).json({
             success: false,
             message: error.message
         });
+        console.log(error);
     }
 }
 

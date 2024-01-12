@@ -9,6 +9,6 @@ router.post("/capturePayment", auth, isStudent, capturePayment);
 router.post("/verifySignature", auth, verifySignature);
 router.put("/sendPaymentSuccessEmail", auth, isStudent, sendPaymentSuccessEmail);
 router.put("/addToCart", auth, isStudent, addToCart);
-router.put("/addToCart", auth, isStudent, removeFromCart);
+router.put("/removeFromCart", auth, isStudent, removeFromCart);
 
 export default router

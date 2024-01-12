@@ -59,9 +59,15 @@ const courseSchema = new Schema<course>({
         type: String,
         enum: ['Draft', 'Published'],
     },
-    sold: Number,
+    sold: {
+        type: Number,
+        default: 0
+    },
     totalDuration: String,
-    progressPercentage: Number
+    progressPercentage: {
+        type: Number,
+        default: 0
+    }
 }, {
     timestamps: true
 });

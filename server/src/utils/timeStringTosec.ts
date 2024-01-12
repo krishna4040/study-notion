@@ -1,5 +1,5 @@
 export function convertToSeconds(timeString: string): number {
-    // Extract hours, minutes, and seconds using regular expressions
+
     const hoursMatch = timeString.match(/\d+H/);
     const minutesMatch = timeString.match(/\d+M/);
     const secondsMatch = timeString.match(/\d+S/);

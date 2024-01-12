@@ -17,7 +17,7 @@ const EnrolledCourses = () => {
             const response = await getUserEnrolledCourses(token!);
             setEnrolledCourses(response);
         } catch (error) {
-            console.log("could not fecth enrolled courses");
+            console.log("could not fetch enrolled courses");
         }
     }
 

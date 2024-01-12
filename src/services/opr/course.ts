@@ -37,8 +37,8 @@ export const getAllCourses = async () => {
 }
 
 export const fetchCourseDetails = async (courseId: string, token: string) => {
-    const toastId = toast.loading("Loading...")
-    let result = null
+    const toastId = toast.loading("Loading...");
+    let result = null;
     try {
         const response = await axios.get(`${COURSE_DETAILS_API}/${courseId}`, {
             headers: {
@@ -46,14 +46,15 @@ export const fetchCourseDetails = async (courseId: string, token: string) => {
             }
         });
         if (!response.data.success) {
-            throw new Error(response.data.message)
+            throw new Error(response.data.message);
         }
         result = response.data.data;
     } catch (error: any) {
-        result = error.message
+        console.log(error);
+        result = error.message;
     }
-    toast.dismiss(toastId)
-    return result
+    toast.dismiss(toastId);
+    return result;
 }
 
 export const fetchInstructorCourses = async (token: string) => {

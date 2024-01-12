@@ -12,10 +12,10 @@ const CourseCard = async ({ course }: { course: course }) => {
 
     return (
         <>
-            <Link href={`courses/${course._id}`}>
+            <Link href={`/course/${course._id}`}>
                 <div>
                     <div className="rounded-lg">
-                        <Image src={course.thumbnail} alt='Course' className={`w-full rounded-xl object-cover`} height={250} />
+                        <Image src={course.thumbnail} alt='Course' className={`w-full rounded-xl object-cover`} height={250} width={250} />
                     </div>
                     <div className="flex flex-col gap-2 px-1 py-3">
                         <p className="text-xl text-richblack-5">{course.courseName}</p>

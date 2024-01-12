@@ -52,7 +52,7 @@ const CourseDetailsCard: React.FunctionComponent<props> = ({ course, setConfirma
 
     return (
         <div>
-            <Image src={course.thumbnail} alt='Course' />
+            <Image src={course.thumbnail} alt='Course' height={250} width={250} />
             <p>Rs. {course.price}</p>
             <div>
                 <button onClick={() => {

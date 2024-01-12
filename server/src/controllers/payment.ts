@@ -16,7 +16,7 @@ export const capturePayment = async (req: Request, res: Response) => {
             throw new Error('Invalid req');
         }
         let totalAmount = 0;
-        courses.forEach(async courseId => {
+        for (const courseId of courses) {
             const course = await Course.findById(courseId);
             if (!course) {
                 throw new Error('Course not found');
@@ -25,7 +25,7 @@ export const capturePayment = async (req: Request, res: Response) => {
                 throw new Error('Already enrolled');
             }
             totalAmount += course.price;
-        });
+        }
 
         const paymentRes = await instance.orders.create({
             amount: totalAmount * 100,
@@ -40,6 +40,7 @@ export const capturePayment = async (req: Request, res: Response) => {
         });
 
     } catch (error: any) {
+        console.log(error);
         res.status(500).json({
             success: false,
             message: error.message
@@ -58,7 +59,7 @@ export const verifySignature = async (req: Request, res: Response) => {
         const expectedSignature = crypto.createHmac("sha356", process.env.RAZORPAY_SECRET!).update(body.toString()).digest("hex");
 
         if (expectedSignature === razorpay_signature) {
-            courses.forEach(async (courseId: string) => {
+            for (const courseId of courses) {
                 const course = await Course.findByIdAndUpdate(courseId, { $push: { studentsEnrolled: userId } }, { new: true });
                 if (!course) {
                     throw new Error('Course not found');
@@ -68,8 +69,8 @@ export const verifySignature = async (req: Request, res: Response) => {
                     user?.email!,
                     `Successfully Enrolled into ${course.courseName}`,
                     courseEnrollmentEmail(course.courseName, `${user?.firstName}`)
-                )
-            });
+                );
+            }
             res.status(200).json({
                 success: true,
                 message: 'Payment Verified'
@@ -109,11 +110,15 @@ export const addToCart = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.body;
         const userId = req.user?.id;
+        const course = await Course.findById(courseId);
         const user = await User.findByIdAndUpdate(userId, { $push: { cart: courseId } }, { new: true });
         res.status(200).json({
             success: true,
             message: 'Course added to cart',
-            data: user
+            data: {
+                user,
+                course
+            }
         });
     } catch (error: any) {
         res.status(500).json({
