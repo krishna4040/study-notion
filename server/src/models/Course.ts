@@ -18,6 +18,8 @@ export type course = {
     sold: number;
     totalDuration: string;
     progressPercentage: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const courseSchema = new Schema<course>({
@@ -60,6 +62,8 @@ const courseSchema = new Schema<course>({
     sold: Number,
     totalDuration: String,
     progressPercentage: Number
+}, {
+    timestamps: true
 });
 
 export default model('Course', courseSchema);

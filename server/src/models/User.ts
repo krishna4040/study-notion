@@ -15,6 +15,7 @@ export type user = {
     resetPasswordExpires?: Date;
     image: string;
     courseProgress?: Types.ObjectId[];
+    cart: Types.ObjectId[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -71,6 +72,10 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "CourseProgress",
     }],
+    cart: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Course'
+    }]
 },
     { timestamps: true }
 );

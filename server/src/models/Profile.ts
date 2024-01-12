@@ -12,6 +12,7 @@ export type profile = {
 const profileSchema = new Schema<profile>({
     gender: {
         type: String,
+        enum: ['Male', 'Female']
     },
     dateOfBirth: {
         type: String,

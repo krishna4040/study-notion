@@ -188,7 +188,7 @@ export const updateSection = async (data: any, token: string) => {
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(UPDATE_SECTION_API, data, {
+        const response = await axios.put(UPDATE_SECTION_API, data, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -210,7 +210,7 @@ export const updateSubSection = async (data: any, token: string) => {
     let result = null;
     const toastId = toast.loading("Loading...");
     try {
-        const response = await axios.post(UPDATE_SUBSECTION_API, data, {
+        const response = await axios.put(UPDATE_SUBSECTION_API, data, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

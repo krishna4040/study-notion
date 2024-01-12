@@ -8,6 +8,7 @@ import SubSection from '../models/SubSection'
 import CourseProgress from '../models/CourseProgress'
 import { convertSecondsToDuration } from '../utils/secToDuration'
 import { UploadedFile } from 'express-fileupload'
+import { convertToSeconds } from '../utils/timeStringTosec'
 require('dotenv').config();
 
 // Function to create a new course
@@ -44,7 +45,7 @@ export const createCourse = async (req: Request, res: Response) => {
         });
 
         await User.findByIdAndUpdate({ _id: userId, }, { $push: { courses: newCourse._id, } });
-        await Category.findByIdAndUpdate({ _id: categoryId }, { $push: { course: newCourse._id } });
+        await Category.findByIdAndUpdate(categoryId, { $push: { course: newCourse._id } });
 
         res.status(200).json({
             success: true,
@@ -65,7 +66,7 @@ export const getAllCourses = async (req: Request, res: Response) => {
         const allCourses = await Course.find({}).select('courseName price thumbnail instructor ratingAndReviews studentsEnrolled').populate("instructor").exec();
         return res.status(200).json({
             success: true,
-            message: 'All courses fecthed',
+            message: 'All courses fetched',
             data: allCourses,
         });
     } catch (error: any) {
@@ -108,7 +109,7 @@ export const getCourseDetails = async (req: Request, res: Response) => {
         let totalDurationInSeconds = 0;
         course.courseContent.forEach(content => {
             content.subSection.forEach((subSection: any) => {
-                const timeDurationInSeconds = parseInt(subSection.timeDuration);
+                const timeDurationInSeconds = convertToSeconds(subSection.timeDuration);
                 totalDurationInSeconds += timeDurationInSeconds;
             });
         });
@@ -116,7 +117,7 @@ export const getCourseDetails = async (req: Request, res: Response) => {
 
         res.status(200).json({
             success: true,
-            message: 'Course details fecthed succesfully',
+            message: 'Course details fetched successfully',
             data: {
                 course,
                 totalDuration,
@@ -126,7 +127,7 @@ export const getCourseDetails = async (req: Request, res: Response) => {
     } catch (error: any) {
         res.status(500).json({
             success: false,
-            message: error.messgae
+            message: error.message
         });
     }
 }
@@ -138,7 +139,7 @@ export const getInstructorCourses = async (req: Request, res: Response) => {
         const allCourses = await Course.find({ instructor: id }).sort({ createdAt: -1 });
         res.status(200).json({
             success: true,
-            message: 'All courses for a logged in instructor fecthed',
+            message: 'All courses for a logged in instructor fetched',
             data: allCourses
         });
     } catch (error: any) {

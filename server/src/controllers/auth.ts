@@ -52,7 +52,7 @@ export const signup = async (req: Request, res: Response) => {
             accountType: accountType,
             approved: approved,
             additionalDetails: profileDetails._id,
-            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+            image: `https://api.dicebear.com/7.x/initials/svg?seed=${firstName}&chars=1`,
         });
 
         return res.status(200).json({

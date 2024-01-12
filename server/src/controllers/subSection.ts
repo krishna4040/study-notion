@@ -39,6 +39,7 @@ export const createSubSection = async (req: Request, res: Response) => {
     }
 };
 
+//Todo
 export const updateSubSection = async (req: Request, res: Response) => {
     try {
         const { subSectionId, title, timeDuration, description } = req.body;

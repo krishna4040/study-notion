@@ -105,3 +105,39 @@ export const sendPaymentSuccessEmail = async (req: Request, res: Response) => {
         })
     }
 }
+
+export const addToCart = async (req: Request, res: Response) => {
+    try {
+        const { courseId } = req.body;
+        const userId = req.user?.id;
+        const user = await User.findByIdAndUpdate(userId, { $push: { cart: courseId } }, { new: true });
+        res.status(200).json({
+            success: true,
+            message: 'Course added to cart',
+            data: user
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const removeFromCart = async (req: Request, res: Response) => {
+    try {
+        const { courseId } = req.body;
+        const userId = req.user?.id;
+        const user = await User.findByIdAndUpdate(userId, { $pull: { cart: courseId } }, { new: true });
+        res.status(200).json({
+            success: true,
+            message: 'Course removed from cart',
+            data: user
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}

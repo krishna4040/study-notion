@@ -6,20 +6,20 @@ import { course } from '../models/Course.js';
 import { section } from '../models/Section.js';
 import { convertSecondsToDuration } from '../utils/secToDuration.js'
 import CourseProgress from '../models/CourseProgress.js';
-import { subSection } from '../models/SubSection.js';
 import { UploadedFile } from 'express-fileupload';
 require('dotenv').config();
 
 export const updateProfile = async (req: Request, res: Response) => {
     try {
-        const { dateOfBirth = "", about = "", contactNumber } = req.body;
+        const { dateOfBirth = "", about = "", contactNumber, gender } = req.body;
         const id = req.user?.id;
 
         const userDetails = await User.findById(id);
         const profile = await Profile.findByIdAndUpdate(userDetails?.additionalDetails!, {
             dateOfBirth,
             about,
-            contactNumber
+            contactNumber,
+            gender
         }, { new: true });
 
         return res.json({

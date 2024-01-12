@@ -41,5 +41,7 @@ const courseSchema = new mongoose_1.Schema({
     sold: Number,
     totalDuration: String,
     progressPercentage: Number
+}, {
+    timestamps: true
 });
 exports.default = (0, mongoose_1.model)('Course', courseSchema);

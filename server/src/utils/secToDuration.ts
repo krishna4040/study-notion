@@ -4,10 +4,10 @@ export const convertSecondsToDuration = (totalSeconds: number) => {
     const seconds = Math.floor((totalSeconds % 3600) % 60)
 
     if (hours > 0) {
-        return `${hours}h ${minutes}m`
+        return `${hours}H ${minutes}M`
     } else if (minutes > 0) {
-        return `${minutes}m ${seconds}s`
+        return `${minutes}M ${seconds}S`
     } else {
-        return `${seconds}s`
+        return `${seconds}S`
     }
 }

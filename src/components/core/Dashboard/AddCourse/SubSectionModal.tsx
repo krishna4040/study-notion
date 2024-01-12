@@ -48,7 +48,7 @@ const SubSectionModal: React.FunctionComponent<props> = ({ modalData, setModalDa
         setTimeDuration(prev => {
             const updatedDuration = { ...prev, [name]: value };
             const { HH, MM, SS } = updatedDuration;
-            const total = `${HH}HH${MM}MM${SS}SS`;
+            const total = `${HH}H${MM}M${SS}S`;
             return { ...updatedDuration, total };
         });
     }

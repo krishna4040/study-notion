@@ -53,6 +53,10 @@ const userSchema = new mongoose_1.Schema({
             type: mongoose_1.Schema.Types.ObjectId,
             ref: "CourseProgress",
         }],
+    cart: [{
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: 'Course'
+        }]
 }, { timestamps: true });
 // Export the Mongoose model for the user schema, using the name "user"
 exports.default = (0, mongoose_1.model)("User", userSchema);
