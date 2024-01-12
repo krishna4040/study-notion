@@ -15,7 +15,9 @@ export interface course {
     status: 'Draft' | 'Published';
     sold: number,
     totalDuration: string,
-    progressPercentage: number
+    progressPercentage: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface category {
@@ -83,4 +85,7 @@ export interface user {
     resetPasswordExpires: Date,
     image: string,
     courseProgress: [courseProgress],
+    createdAt: Date;
+    updatedAt: Date;
+    cart: course[];
 }

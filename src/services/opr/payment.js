@@ -2,13 +2,10 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { courseEndpoints } from '@/services/api'
 import { resetCart } from '@/lib/feature/cartSlice';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { user } from '@/lib/types';
-import { AppDispatch } from '@/lib/store';
 
-const { COURSE_PAYMENT_API } = courseEndpoints;
+const { PAYMENT_CAPTURE_API, PAYMENT_SUCCESS_APT, PAYMENT_VERIFY_API } = courseEndpoints;
 
-const loadScript = (src: string) => {
+const loadScript = (src) => {
     return new Promise(resolve => {
         const script = document.createElement('script');
         script.src = src;
@@ -18,10 +15,10 @@ const loadScript = (src: string) => {
     })
 }
 
-const sendPaymentSuccessfulEmail = async (paymentRes, token: string) => {
+const sendPaymentSuccessfulEmail = async (paymentRes, token) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, amount } = paymentRes;
-        const res = await axios.post('', {
+        const res = await axios.post(PAYMENT_SUCCESS_APT, {
             orderId: razorpay_order_id,
             paymentId: razorpay_payment_id,
             amount
@@ -29,16 +26,17 @@ const sendPaymentSuccessfulEmail = async (paymentRes, token: string) => {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        })
-    } catch (error: any) {
+        });
+    } catch (error) {
         toast.error(error.message);
         console.log(error);
     }
 }
 
-const verifyPayment = async (data, token: string, router: AppRouterInstance, dispatch) => {
+const verifyPayment = async (data, token, router, dispatch) => {
+    const toastId = toast.loading("verifying");
     try {
-        const res = await axios.post('', data, {
+        const res = await axios.post(PAYMENT_VERIFY_API, data, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -46,33 +44,48 @@ const verifyPayment = async (data, token: string, router: AppRouterInstance, dis
         if (!res.data.success) {
             throw new Error('Payment not verified');
         }
+        sendPaymentSuccessfulEmail(res, token);
         dispatch(resetCart());
         router.push('/dashboard/enrolled-courses');
     } catch (error) {
         console.log(error);
     }
+    toast.dismiss(toastId);
 }
 
-export const buyCourse = async (courses: string[], token: string, user: user, dispatch: AppDispatch, router: AppRouterInstance) => {
+export const buyCourse = async (courses, token, user, dispatch, router) => {
     const toastId = toast.loading('loading...');
     try {
-        const res = await loadScript("");
+        const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
         if (!res) {
             throw new Error('Razorpay script unable to load');
         }
-        const paymentRes = await axios.post(COURSE_PAYMENT_API, { courses }, {
+        const { data } = await axios.post(PAYMENT_CAPTURE_API, { courses }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        const options = {}
+        const options = {
+            key: process.env.KEY, // Enter the Key ID generated from the Dashboard
+            amount: 4000,
+            currency: "INR",
+            name: "Study-notion",
+            description: "Test Transaction",
+            order_id: data,
+            handler: function (res) {
+                verifyPayment(res, token, router, dispatch);
+            },
+            theme: {
+                "color": "#3399cc"
+            }
+        };
         const paymentWindow = new window.Razorpay(options);
         paymentWindow.open();
         paymentWindow.on("payment.failed", () => {
             toast.error("oops!! payment failed");
         })
 
-    } catch (error: any) {
+    } catch (error) {
         console.log(error);
         toast.error(error.message);
     }

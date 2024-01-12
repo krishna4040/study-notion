@@ -30,7 +30,7 @@ export const capturePayment = async (req: Request, res: Response) => {
         const paymentRes = await instance.orders.create({
             amount: totalAmount * 100,
             currency: 'INR',
-            receipt: Date.now().toString()
+            receipt: Date.now().toString(),
         });
 
         res.status(200).json({
@@ -95,7 +95,6 @@ export const sendPaymentSuccessEmail = async (req: Request, res: Response) => {
         if (!orderId || !paymentId || !amount) {
             throw new Error('Invalid req');
         }
-
         const student = await User.findById(userId);
         await mailSender(student?.email!, 'Payment success', 'email');
     } catch (error: any) {
