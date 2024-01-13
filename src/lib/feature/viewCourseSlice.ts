@@ -3,14 +3,14 @@ import { section, subSection, course } from "../types";
 
 interface viewCourseState {
     courseSectionData: Array<section>;
-    courseEntireData: Array<course>;
+    courseEntireData: course | null;
     completedLectures: Array<subSection>;
     totalNoOfLectures: number;
 }
 
 const initialState: viewCourseState = {
     courseSectionData: [],
-    courseEntireData: [],
+    courseEntireData: null,
     completedLectures: [],
     totalNoOfLectures: 0,
 }
@@ -22,7 +22,7 @@ const viewCourseSlice = createSlice({
         setCourseSectionData: (state, action: PayloadAction<Array<section>>) => {
             state.courseSectionData = action.payload
         },
-        setEntireCourseData: (state, action: PayloadAction<Array<course>>) => {
+        setEntireCourseData: (state, action: PayloadAction<course>) => {
             state.courseEntireData = action.payload
         },
         setTotalNoOfLectures: (state, action: PayloadAction<number>) => {

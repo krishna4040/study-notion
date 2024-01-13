@@ -6,11 +6,13 @@ import ProgressBar from '@ramonak/react-progress-bar';
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { course } from '@/lib/types';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
 
 const EnrolledCourses = () => {
 
     const { token } = useAppSelector(state => state.auth);
     const [enrolledCourses, setEnrolledCourses] = useState<Array<course>>([]);
+    const router = useRouter();
 
     const getEnrolledCourses = async () => {
         try {
@@ -45,7 +47,9 @@ const EnrolledCourses = () => {
                                         <tr key={index}>
 
                                             <td>
-                                                <div className='flex gap-5 p-4'>
+                                                <div className='flex gap-5 p-4' onClick={() => {
+                                                    router.push(`/view-course/${course._id}/section/${course.courseContent[0]._id}/subSection/${course.courseContent[0].subSection[0]._id}`);
+                                                }}>
                                                     <Image src={course.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
                                                     <div>
                                                         <p className='font-medium font-inter text-[#F1F2FF]'>{course.courseName}</p>

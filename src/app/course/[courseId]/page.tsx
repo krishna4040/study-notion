@@ -14,6 +14,7 @@ import Modal from '@/components/common/Modal'
 import Footer from '@/components/common/Footer'
 import CourseDetailsCars from '@/components/core/Course/CourseDetailsCard';
 import Image from 'next/image'
+import Markdown from 'react-markdown'
 
 const page = ({ params }: { params: { courseId: string } }) => {
 
@@ -136,7 +137,7 @@ const page = ({ params }: { params: { courseId: string } }) => {
                     <div className="my-8 border border-richblack-600 p-8">
                         <p className="text-3xl font-semibold">What you'll learn</p>
                         <div className="mt-5">
-                            {/* <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown> */}
+                            <Markdown>{course.whatYouWillLearn}</Markdown>
                         </div>
                     </div>
 

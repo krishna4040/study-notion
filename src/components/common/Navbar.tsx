@@ -91,7 +91,7 @@ const Navbar = () => {
                         token && user && user?.accountType != 'Instructor' &&
                         <Link href='/dashboard/cart' className='relative'>
                             <AiOutlineShoppingCart className='text-[#999DAA] text-lg' />
-                            {totalItems > 0 && <span>{totalItems}</span>}
+                            {totalItems > 0 && <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">{totalItems}</span>}
                         </Link>
                     }
                     {token === null && <Link href='/login'><button className='px-3 py-2 border rounded-md border-richblack-700 bg-richblack-800 text-richblack-100'>Login</button></Link>}
