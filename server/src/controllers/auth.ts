@@ -105,11 +105,11 @@ export const login = async (req: Request, res: Response) => {
         } else {
             throw new Error("Invalid password");
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error(error);
         return res.status(500).json({
             success: false,
-            message: `Login Failure Please Try Again`,
+            message: error.message,
         });
     }
 };

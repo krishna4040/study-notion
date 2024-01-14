@@ -20,6 +20,7 @@ const CourseDetailsCard: React.FunctionComponent<props> = ({ course, setConfirma
 
     const { user } = useAppSelector(state => state.profile);
     const { token } = useAppSelector(state => state.auth);
+    const { cart } = useAppSelector(state => state.cart);
     const router = useRouter();
     const dispatch = useAppDispatch();
 
@@ -28,6 +29,7 @@ const CourseDetailsCard: React.FunctionComponent<props> = ({ course, setConfirma
             toast.error("You are an Instructor, You cannot buy the course");
         }
         if (token) {
+            // todo: backend pr integrate
             dispatch(addToCart(course));
             toast.success("Course Added to Cart");
             return;
@@ -51,26 +53,30 @@ const CourseDetailsCard: React.FunctionComponent<props> = ({ course, setConfirma
     }
 
     return (
-        <div>
-            <Image src={course.thumbnail} alt='Course' height={250} width={250} />
-            <p>Rs. {course.price}</p>
-            <div>
+        <div className={`flex flex-col gap-4 rounded-md bg-richblack-700 p-4 text-richblack-5`}>
+            <Image src={course.thumbnail} alt='Course' height={180} width={400} />
+            <p className='space-x-3 pb-4 text-3xl font-semibold'>Rs. {course.price}</p>
+            <div className="flex flex-col gap-4">
                 <button onClick={() => {
                     course.studentsEnrolled.includes(user!) ?
                         router.push('dashboard/enrolled-courses') :
                         handleBuyCourse();
-                }}>
+                }} className="yellowButton">
                     {course.studentsEnrolled.includes(user!) ? "Go To Course" : "Buy Now"}
                 </button>
                 {
-                    !course.studentsEnrolled.includes(user!) &&
-                    <button onClick={handleAddToCart}>Add To Cart</button>
+                    !course.studentsEnrolled.includes(user!) && !cart?.includes(course) &&
+                    <button onClick={handleAddToCart} className="blackButton">Add To Cart</button>
+                }
+                {
+                    cart?.includes(course) &&
+                    <button onClick={() => { router.push('/dashboard/cart') }} className="blackButton">Go To Cart</button>
                 }
             </div>
             <div>
-                <p>30 Day money back guarantee</p>
-                <p>This Course Includes:</p>
-                <div>
+                <p className="pb-3 pt-6 text-center text-sm text-richblack-25">30 Day money back guarantee</p>
+                <p className={`my-2 text-xl font-semibold `}>This Course Includes:</p>
+                <div className="flex flex-col gap-3 text-sm text-caribbeangreen-100">
                     {
                         course.instructions.map((ins, idx) => {
                             return (
@@ -82,7 +88,7 @@ const CourseDetailsCard: React.FunctionComponent<props> = ({ course, setConfirma
                     }
                 </div>
             </div>
-            <button onClick={handleShare}>Share</button>
+            <button className="mx-auto flex items-center gap-2 py-6 text-yellow-100 text-center" onClick={handleShare}>Share</button>
         </div>
     )
 }

@@ -32,7 +32,7 @@ export function getUserDetails(token: string, router: AppRouterInstance) {
             dispatch(setUser({ ...response.data.data, image: userImage }))
         } catch (error) {
             dispatch(logout(router));
-            toast.error("Could Not Get User Details")
+            toast.error("Could Not Get User Details");
         }
         toast.dismiss(toastId)
         dispatch(setLoading(false))

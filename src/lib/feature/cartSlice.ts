@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast'
 import { course } from '../types'
 
 interface cartState {
-    cart: Array<course> | null;
+    cart: Array<course>;
     total: number;
     totalItems: number;
 }
@@ -18,20 +18,16 @@ const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
+        setCart: (state, action: PayloadAction<course[]>) => {
+            state.cart = action.payload;
+        },
         setTotalItems: (state, action) => {
             state.totalItems = action.payload
         },
         addToCart: (state, action: PayloadAction<course>) => {
-            const course = action.payload;
-            const index = state.cart!.findIndex((item) => item._id === course._id);
-
-            if (index >= 0) {
-                return;
-            }
-
-            state.cart!.push(course);
+            state.cart.push(action.payload);
             state.totalItems++;
-            state.total += course.price;
+            state.total += action.payload.price;
         },
         removeFromCart: (state, action: PayloadAction<string>) => {
             const courseId = action.payload;
@@ -51,5 +47,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { setTotalItems, addToCart, removeFromCart, resetCart } = cartSlice.actions;
+export const { setTotalItems, addToCart, removeFromCart, resetCart, setCart } = cartSlice.actions;
 export default cartSlice.reducer;

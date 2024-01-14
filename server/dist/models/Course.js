@@ -41,11 +41,6 @@ const courseSchema = new mongoose_1.Schema({
     sold: {
         type: Number,
         default: 0
-    },
-    totalDuration: String,
-    progressPercentage: {
-        type: Number,
-        default: 0
     }
 }, {
     timestamps: true

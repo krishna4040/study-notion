@@ -2,7 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const courseProgressSchema = new mongoose_1.Schema({
-    courseID: {
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    courseId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Course",
     },
