@@ -117,7 +117,22 @@ export const getCourseDetails = async (req: Request, res: Response) => {
 export const getInstructorCourses = async (req: Request, res: Response) => {
     try {
         const id = req.user?.id;
-        const allCourses = await Course.find({ instructor: id }).sort({ createdAt: -1 });
+        const allCourses = await Course.find({ instructor: id }).sort({ createdAt: -1 })
+            .populate({
+                path: "instructor",
+                populate: {
+                    path: 'additionalDetails'
+                },
+            })
+            .populate('category')
+            .populate('ratingAndReviews')
+            .populate<{ courseContent: section[] }>({
+                path: "courseContent",
+                populate: {
+                    path: "subSection"
+                }
+            })
+            .exec();
         res.status(200).json({
             success: true,
             message: 'All courses for a logged in instructor fetched',
