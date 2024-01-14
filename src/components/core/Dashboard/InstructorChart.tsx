@@ -19,14 +19,11 @@ const InstructorChart = ({ courses }: { courses: course[] }) => {
         return colors;
     }
 
-    const calculateTotalStudentsEnrolled = (course: course) => { }
-    const calculateTotalAmountGenerated = (course: course) => { }
-
     const chartDataForStudents = {
         labels: courses.map(course => course.courseName),
         datasets: [
             {
-                data: courses.map(course => calculateTotalStudentsEnrolled(course)),
+                data: courses.map(course => course.studentsEnrolled.length),
                 backgroundColor: generateRandomColors(courses.length)
             }
         ]
@@ -36,10 +33,14 @@ const InstructorChart = ({ courses }: { courses: course[] }) => {
         labels: courses.map(course => course.courseName),
         datasets: [
             {
-                data: courses.map(course => calculateTotalAmountGenerated(course)),
+                data: courses.map(course => course.studentsEnrolled.length * course.price),
                 backgroundColor: generateRandomColors(courses.length)
             }
         ]
+    }
+
+    const options = {
+        maintainAspectRatio: false,
     }
 
     return (
@@ -56,6 +57,7 @@ const InstructorChart = ({ courses }: { courses: course[] }) => {
             <div className="relative mx-auto aspect-square h-full w-full">
                 <Pie
                     data={currChart == "students" ? chartDataForStudents : chartDataForIncome}
+                    options={options}
                 />
             </div>
         </div>

@@ -22,8 +22,20 @@ const InstructorPanel = () => {
         getCourseData();
     }, []);
 
-    const calculateTotalAmountEarned = (courses: course[]) => { }
-    const calculateTotalStudentsEnrolled = (courses: course[]) => { }
+    const calculateTotalStudentsEnrolled = (courses: course[]) => {
+        let total = 0;
+        courses.forEach(course => {
+            total += course.studentsEnrolled.length;
+        });
+        return total;
+    }
+    const calculateTotalAmountEarned = (courses: course[]) => {
+        let total = 0;
+        courses.forEach(course => {
+            total += course.studentsEnrolled.length * course.price;
+        });
+        return total;
+    }
 
     return (
         <div>
@@ -43,11 +55,11 @@ const InstructorPanel = () => {
                                     </div>
                                     <div>
                                         <p className="text-lg text-richblack-200">Total Students</p>
-                                        {/* <p className="text-3xl font-semibold text-richblack-50">{calculateTotalStudentsEnrolled(courses)}</p> */}
+                                        <p className="text-3xl font-semibold text-richblack-50">{calculateTotalStudentsEnrolled(courses)}</p>
                                     </div>
                                     <div>
                                         <p className="text-lg text-richblack-200">Total Income</p>
-                                        {/* <p className="text-3xl font-semibold text-richblack-50">{calculateTotalAmountEarned(courses)}</p> */}
+                                        <p className="text-3xl font-semibold text-richblack-50">{calculateTotalAmountEarned(courses)}</p>
                                     </div>
                                 </div>
                             </div>

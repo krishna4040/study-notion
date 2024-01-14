@@ -17,6 +17,7 @@ import Image from 'next/image'
 import Markdown from 'react-markdown'
 import { convertToSeconds } from '@/utils/convetToSeconds';
 import { convertSecondsToDuration } from '@/utils/convertToDuration';
+import CourseAccordianBar from '@/components/core/Course/CourseAccordianBar';
 
 const page = ({ params }: { params: { courseId: string } }) => {
 
@@ -30,6 +31,7 @@ const page = ({ params }: { params: { courseId: string } }) => {
     const [course, setCourse] = useState<course | null>(null);
     const [confirmationModal, setConfirmationModal] = useState<modalData | null>(null);
     const [avgReviewCount, setAvgReviewCount] = useState(0);
+    const [isActive, setIsActive] = useState<string[]>([]);
 
     const fetchCourse = async () => {
         const res = await fetchCourseDetails(courseId, token!);
@@ -77,6 +79,14 @@ const page = ({ params }: { params: { courseId: string } }) => {
             });
         });
         return convertSecondsToDuration(totalDurationInSeconds);
+    }
+
+    const handleActive = (sectionId: string) => {
+        setIsActive(
+            !isActive.includes(sectionId)
+                ? isActive.concat([sectionId])
+                : isActive.filter((e) => e != sectionId)
+        )
     }
 
     return (
@@ -172,7 +182,7 @@ const page = ({ params }: { params: { courseId: string } }) => {
                                 <div>
                                     <button
                                         className="text-yellow-25"
-                                    // onClick={() => setIsActive([])}
+                                        onClick={() => setIsActive([])}
                                     >
                                         Collapse all sections
                                     </button>
@@ -182,14 +192,13 @@ const page = ({ params }: { params: { courseId: string } }) => {
 
                         {/* Course Details Accordion */}
                         <div className="py-4">
-                            {/* {courseContent?.map((course, index) => (
-                                <CourseAccordionBar
-                                    course={course}
-                                    key={index}
-                                    isActive={isActive}
-                                    handleActive={handleActive}
-                                />
-                            ))} */}
+                            {
+                                course.courseContent?.map((section, index) => {
+                                    return (
+                                        <CourseAccordianBar section={section} key={index} isActive={isActive} handleActive={handleActive} />
+                                    )
+                                })
+                            }
                         </div>
 
                         {/* Author Details */}

@@ -1,3 +1,4 @@
+'use client'
 import { subSection } from "@/lib/types"
 import React, { useEffect, useRef, useState } from "react"
 import { AiOutlineDown } from "react-icons/ai"
