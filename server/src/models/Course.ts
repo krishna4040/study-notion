@@ -62,11 +62,6 @@ const courseSchema = new Schema<course>({
     sold: {
         type: Number,
         default: 0
-    },
-    totalDuration: String,
-    progressPercentage: {
-        type: Number,
-        default: 0
     }
 }, {
     timestamps: true

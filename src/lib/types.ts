@@ -14,8 +14,6 @@ export interface course {
     instructions: string[];
     status: 'Draft' | 'Published';
     sold: number,
-    totalDuration: string,
-    progressPercentage: number;
     createdAt: Date;
     updatedAt: Date;
 }

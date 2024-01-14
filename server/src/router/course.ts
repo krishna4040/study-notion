@@ -19,6 +19,7 @@ import { createRating, getAllRatingReview, getAverageRating } from '../controlle
 
 // Middlewares
 import { auth, isInstructor, isStudent, isAdmin } from "../middlewares/auth"
+import { updateCourseProgress } from '../controllers/courseProgress'
 
 // ********************************************************************************************************
 //                                      Course routes
@@ -43,15 +44,17 @@ router.get("/getAllCourses", getAllCourses)
 // Get Details for a Specific Courses
 router.get("/getCourseDetails/:courseId", getCourseDetails)
 // Get all Courses Under a Specific Instructor
-router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses);
+// update courseProgress
+router.put("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
 // ********************************************************************************************************
 //                                      Category routes (Only by Admin)
 // ********************************************************************************************************
 // Category can Only be Created by Admin
 router.post("/createCategory", auth, createCategory);
-router.get("/showAllCategories", showAllCategories)
-router.get("/getCategoryPageDetails/:categoryName", categoryPageDetails)
+router.get("/showAllCategories", showAllCategories);
+router.get("/getCategoryPageDetails/:categoryName", categoryPageDetails);
 
 // ********************************************************************************************************
 //                                      Rating and Review

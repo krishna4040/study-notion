@@ -41,7 +41,7 @@ export function getUserDetails(token: string, router: AppRouterInstance) {
 
 export async function getUserEnrolledCourses(token: string) {
     const toastId = toast.loading("Loading...")
-    let result = []
+    let result = null;
     try {
         const response = await axios.get(GET_USER_ENROLLED_COURSES_API, {
             headers: {
@@ -56,7 +56,7 @@ export async function getUserEnrolledCourses(token: string) {
         toast.error("Could Not Get Enrolled Courses")
     }
     toast.dismiss(toastId)
-    return result
+    return result;
 }
 
 export async function getInstructorData(token: string) {

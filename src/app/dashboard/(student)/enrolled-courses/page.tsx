@@ -7,17 +7,21 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import { course } from '@/lib/types';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
+import { convertToSeconds } from '@/utils/convetToSeconds';
+import { convertSecondsToDuration } from '@/utils/convertToDuration';
 
 const EnrolledCourses = () => {
 
     const { token } = useAppSelector(state => state.auth);
     const [enrolledCourses, setEnrolledCourses] = useState<Array<course>>([]);
+    const [progress, setProgress] = useState<number>(0);
     const router = useRouter();
 
     const getEnrolledCourses = async () => {
         try {
-            const response = await getUserEnrolledCourses(token!);
-            setEnrolledCourses(response);
+            const res = await getUserEnrolledCourses(token!);
+            setEnrolledCourses(res.enrolledCourses);
+            setProgress(res.progressPercentage);
         } catch (error) {
             console.log("could not fetch enrolled courses");
         }
@@ -26,6 +30,18 @@ const EnrolledCourses = () => {
     useEffect(() => {
         getEnrolledCourses();
     }, []);
+
+    const calculateTotalDuration = (course: course): string => {
+        let totalDurationInSeconds: string | number = 0;
+        course.courseContent.forEach(content => {
+            content.subSection.forEach((subSection: any) => {
+                if (typeof totalDurationInSeconds === 'number') {
+                    totalDurationInSeconds += convertToSeconds(subSection.timeDuration);
+                }
+            });
+        });
+        return convertSecondsToDuration(totalDurationInSeconds);
+    }
 
     return (
         <div>
@@ -59,13 +75,13 @@ const EnrolledCourses = () => {
                                             </td>
 
                                             <td>
-                                                <p className='text-[#838894] p-4'>{course.totalDuration || "2hrs 30min"}</p>
+                                                <p className='text-[#838894] p-4'>{calculateTotalDuration(course) || "2hrs 30min"}</p>
                                             </td>
 
                                             <td>
                                                 <div className='flex flex-col gap-1 p-4'>
-                                                    <p className='text-[#838894]'>Progress: {course.progressPercentage || 40}%</p>
-                                                    <ProgressBar completed={course.progressPercentage || 40} height='8px' isLabelVisible={false} />
+                                                    <p className='text-[#838894]'>Progress: {progress || 40}%</p>
+                                                    <ProgressBar completed={progress || 40} height='8px' isLabelVisible={false} />
                                                 </div>
                                             </td>
 

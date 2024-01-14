@@ -105,22 +105,24 @@ export const updateDisplayPicture = async (req: Request, res: Response) => {
 export const getEnrolledCourses = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(userId)
+            .populate<{ courses: course[] }>({
+                path: "courses",
+                populate: {
+                    path: "courseContent",
+                    populate: "subSection"
+                }
+            })
+            .exec();
+
         const enrolledCourses = user?.courses;
+        let subSectionLength = 0, progressPercentage = 0;
 
-        enrolledCourses?.forEach(async courseId => {
-            const course = await Course.findById(courseId).populate<{ courseContent: section[] }>({ path: 'courseContent', populate: 'subSection' });
-            let totalDurationInSeconds = 0, subSectionLength = 0, progressPercentage = 0;
-
-            course?.courseContent.forEach(sec => {
-                sec.subSection.forEach((sub: any) => {
-                    totalDurationInSeconds += convertToSeconds(sub.timeDuration);
-                });
-                subSectionLength += sec.subSection.length;
-            });
+        enrolledCourses?.forEach(async c => {
+            const course = await Course.findById(c._id).populate<{ courseContent: section[] }>({ path: 'courseContent', populate: 'subSection' });
 
             const courseProgressCount = await CourseProgress.findOne({
-                courseID: course?.id,
+                courseId: course?.id,
                 userId: userId,
             });
             const completedVideos = courseProgressCount?.completedVideos.length;
@@ -131,28 +133,14 @@ export const getEnrolledCourses = async (req: Request, res: Response) => {
                 progressPercentage = Math.round((completedVideos! / subSectionLength) * 100 * multiplier) / multiplier;
             }
 
-            const updatedCourse = await Course.findByIdAndUpdate(courseId, {
-                totalDuration: convertSecondsToDuration(totalDurationInSeconds),
-                progressPercentage
-            }, {
-                new: true
-            });
-
         });
-
-        const updatedUser = await User.findById(userId)
-            .populate<{ courses: course[] }>({
-                path: "courses",
-                populate: {
-                    path: "courseContent",
-                    populate: "subSection"
-                }
-            })
-            .exec();
 
         return res.status(200).json({
             success: true,
-            data: updatedUser,
+            data: {
+                enrolledCourses,
+                progressPercentage
+            }
         })
     } catch (error: any) {
         return res.status(500).json({

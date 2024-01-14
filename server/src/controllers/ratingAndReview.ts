@@ -14,10 +14,7 @@ export const createRating = async (req: Request, res: Response) => {
         });
 
         if (!course) {
-            res.status(404).json({
-                success: false,
-                message: 'Student is not enrolled in course'
-            });
+            throw new Error('Student not enrolled in the course');
         }
 
         const alreadyReviewed = await RatingAndReview.findOne({
@@ -25,25 +22,21 @@ export const createRating = async (req: Request, res: Response) => {
             course: courseId
         });
         if (alreadyReviewed) {
-            res.status(400).json({
-                success: false,
-                message: 'Course is already reviewed by user'
-            });
+            throw new Error('Course already reviewed');
         }
 
         const ratingReview = await RatingAndReview.create({
             rating,
+            review,
             course: courseId,
             user: userId
         });
 
-        await Course.findByIdAndUpdate({ _id: courseId }, {
-            $push: { ratingAndReviews: ratingReview._id }
-        }, { new: true });
+        await Course.findByIdAndUpdate({ _id: courseId }, { $push: { ratingAndReviews: ratingReview._id } }, { new: true });
 
         res.status(200).json({
             success: true,
-            message: 'Rating and review succesfully added'
+            message: 'Rating and review successfully added'
         });
     } catch (error: any) {
         return res.status(500).json({
@@ -108,7 +101,7 @@ export const getAllRatingReview = async (req: Request, res: Response) => {
 
         res.status(200).json({
             success: false,
-            message: 'All reviews fecthed succsesfully',
+            message: 'All reviews fetched successfully',
             data: allReviews
         })
 

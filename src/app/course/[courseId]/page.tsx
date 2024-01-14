@@ -15,6 +15,8 @@ import Footer from '@/components/common/Footer'
 import CourseDetailsCars from '@/components/core/Course/CourseDetailsCard';
 import Image from 'next/image'
 import Markdown from 'react-markdown'
+import { convertToSeconds } from '@/utils/convetToSeconds';
+import { convertSecondsToDuration } from '@/utils/convertToDuration';
 
 const page = ({ params }: { params: { courseId: string } }) => {
 
@@ -63,6 +65,18 @@ const page = ({ params }: { params: { courseId: string } }) => {
             totalLect += sec.subSection.length;
         });
         return totalLect;
+    }
+
+    const calculateTotalDuration = (course: course): string => {
+        let totalDurationInSeconds: string | number = 0;
+        course.courseContent.forEach(content => {
+            content.subSection.forEach((subSection: any) => {
+                if (typeof totalDurationInSeconds === 'number') {
+                    totalDurationInSeconds += convertToSeconds(subSection.timeDuration);
+                }
+            });
+        });
+        return convertSecondsToDuration(totalDurationInSeconds);
     }
 
     return (
@@ -153,7 +167,7 @@ const page = ({ params }: { params: { courseId: string } }) => {
                                     <span>
                                         {course?.courseContent.length && calculateTotalLectures(course?.courseContent!)} {`lecture(s)`}
                                     </span>
-                                    <span>{course?.totalDuration} total length</span>
+                                    <span>{calculateTotalDuration(course)} total length</span>
                                 </div>
                                 <div>
                                     <button

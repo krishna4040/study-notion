@@ -79,24 +79,7 @@ export const getAllCourses = async (req: Request, res: Response) => {
 export const getCourseDetails = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.params;
-        const course = await Course.findOne({ _id: courseId })
-            .populate<{ courseContent: section[] }>({ path: "courseContent", populate: "subSection" })
-            .exec();
-        if (!course) {
-            throw new Error('Course not found');
-        }
-
-        let totalDurationInSeconds = 0, subSectionLength = 0;
-        course.courseContent.forEach(content => {
-            content.subSection.forEach((subSection: any) => {
-                totalDurationInSeconds += convertToSeconds(subSection.timeDuration);
-            });
-            subSectionLength += content.subSection.length;
-        });
-
-        const updatedCourse = await Course.findByIdAndUpdate(courseId, {
-            totalDuration: convertSecondsToDuration(totalDurationInSeconds)
-        }, { new: true })
+        const course = await Course.findById(courseId)
             .populate({
                 path: "instructor",
                 populate: {
@@ -112,11 +95,14 @@ export const getCourseDetails = async (req: Request, res: Response) => {
                 }
             })
             .exec();
+        if (!course) {
+            throw new Error('Course not found');
+        }
 
         res.status(200).json({
             success: true,
             message: 'Course details fetched successfully',
-            data: updatedCourse
+            data: course
         });
     } catch (error: any) {
         res.status(500).json({

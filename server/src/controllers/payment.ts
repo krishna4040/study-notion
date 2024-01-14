@@ -4,9 +4,9 @@ import Course from "../models/Course";
 import User from "../models/User";
 import { mailSender } from "../utils/mailSender";
 import { courseEnrollmentEmail } from '../mail/courseEnrollmentEmail';
-import mongoose from "mongoose";
 require('dotenv').config();
 import crypto from 'crypto'
+import CourseProgress from '../models/CourseProgress';
 
 export const capturePayment = async (req: Request, res: Response) => {
     try {
@@ -65,6 +65,10 @@ export const verifySignature = async (req: Request, res: Response) => {
                     throw new Error('Course not found');
                 }
                 const user = await User.findByIdAndUpdate(userId, { $push: { courses: courseId } }, { new: true });
+                const createProgress = await CourseProgress.create({
+                    userId,
+                    courseId
+                });
                 const emailRes = await mailSender(
                     user?.email!,
                     `Successfully Enrolled into ${course.courseName}`,
