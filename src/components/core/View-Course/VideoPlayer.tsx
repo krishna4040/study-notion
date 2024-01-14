@@ -3,8 +3,8 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { subSection } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react'
-import { Player } from 'video-react';
-import '~video-react/dist/video-react.css';
+import { Player, BigPlayButton } from 'video-react';
+import 'video-react/dist/video-react.css';
 
 const VideoPlayer = ({ courseId, sectionId, subSectionId }: { courseId: string; sectionId: string, subSectionId: string }) => {
 
@@ -23,7 +23,7 @@ const VideoPlayer = ({ courseId, sectionId, subSectionId }: { courseId: string; 
             router.push('/dashboard/enrolled-courses');
         }
         const activeSec = courseSectionData.filter(sec => sec._id === sectionId);
-        const activeSubSec = activeSec[0].subSection.filter(sub => sub._id === subSectionId);
+        const activeSubSec = activeSec[0]?.subSection.filter(sub => sub._id === subSectionId);
         setVideoData(activeSubSec[0]);
         setVideoDataEnded(false);
     }
@@ -62,6 +62,7 @@ const VideoPlayer = ({ courseId, sectionId, subSectionId }: { courseId: string; 
         const selectedSubSectionIndex = courseSectionData[selectedSectionIndex].subSection.findIndex(data => data._id === subSectionId);
 
         if (selectedSectionIndex != 0) {
+            console.log(selectedSectionIndex);
             const prevSubSectionId = courseSectionData[selectedSectionIndex].subSection[selectedSubSectionIndex - 1]._id;
             router.push(`/view-course/${courseEntireData?._id}/section/${sectionId}/subSection/${prevSubSectionId}`);
         } else {
@@ -80,11 +81,32 @@ const VideoPlayer = ({ courseId, sectionId, subSectionId }: { courseId: string; 
             {
                 videoData &&
                 <div>
-                    <Player>
-                        <source src={videoData.videoUrl} />
+                    <Player ref={ref} aspectRatio="auto" playsInline onEnded={() => setVideoDataEnded(true)} src={videoData?.videoUrl}>
+                        <BigPlayButton position="center" />
+                        {
+                            videoDataEnded &&
+                            <div
+                                style={{
+                                    backgroundImage:
+                                        "linear-gradient(to top, rgb(0, 0, 0), rgba(0,0,0,0.7), rgba(0,0,0,0.5), rgba(0,0,0,0.1)",
+                                }}
+                                className="full absolute inset-0 z-[100] grid h-full place-content-center font-inter">
+                                {
+                                    !completedLectures.includes(videoData) &&
+                                    <button>{!loading ? "Mark as completed" : "Loading..."}</button>
+                                }
+                                <button>Re-watch</button>
+                                <div className="mt-10 flex min-w-[250px] justify-center gap-x-4 text-xl">
+                                    {!isFirstVideo() && <button onClick={gotoPrevVideo} className="blackButton">Prev</button>}
+                                    {!isLastVideo() && <button onClick={gotoNextVideo} className="blackButton">Next</button>}
+                                </div>
+                            </div>
+                        }
                     </Player>
                 </div>
             }
+            <h1 className="mt-4 text-3xl font-semibold text-[#F1F2FF]">{videoData?.title}</h1>
+            <p className="pt-2 pb-6 text-[#F1F2FF]">{videoData?.description}</p>
         </div>
     )
 }
