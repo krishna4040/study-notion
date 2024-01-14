@@ -40,8 +40,11 @@ export const buyCourse = async (courses, token, user, dispatch, router) => {
             },
             // The response object is an important object it have all the details of payment
             handler: function (res) {
+                const { razorpay_payment_id: paymentId, razorpay_order_id: orderId, razorpay_signature: signature } = res;
+                const amount = data.data.amount;
+
                 verifyPayment({ ...res, courses }, token, router, dispatch);
-                sendPaymentSuccessfulEmail(res, data.data.amount, token);
+                sendPaymentSuccessfulEmail(orderId, paymentId, amount);
             }
         };
         const paymentWindow = new window.Razorpay(options);
@@ -56,15 +59,15 @@ export const buyCourse = async (courses, token, user, dispatch, router) => {
     toast.dismiss(toastId);
 }
 
-const verifyPayment = async (data, token, router, dispatch) => {
+const verifyPayment = async (res, token, router, dispatch) => {
     const toastId = toast.loading("verifying payment");
     try {
-        const res = await axios.post(PAYMENT_VERIFY_API, data, {
+        const response = await axios.post(PAYMENT_VERIFY_API, res, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        if (!res.data.success) {
+        if (!response.data.success) {
             throw new Error('Payment not verified');
         }
         dispatch(resetCart());
@@ -75,12 +78,11 @@ const verifyPayment = async (data, token, router, dispatch) => {
     toast.dismiss(toastId);
 }
 
-const sendPaymentSuccessfulEmail = async (data, token) => {
+const sendPaymentSuccessfulEmail = async (orderId, paymentId, amount, token) => {
     try {
-        const { razorpay_order_id, razorpay_payment_id, amount } = data;
-        const res = await axios.post(PAYMENT_SUCCESS_APT, {
-            orderId: razorpay_order_id,
-            paymentId: razorpay_payment_id,
+        const res = await axios.put(PAYMENT_SUCCESS_APT, {
+            orderId,
+            paymentId,
             amount
         }, {
             headers: {
