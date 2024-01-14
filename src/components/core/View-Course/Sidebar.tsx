@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { IoIosArrowBack } from "react-icons/io"
 import { BsChevronDown } from "react-icons/bs"
 
-const Sidebar = ({ sectionId, subSectionId, setReviewModal }: { sectionId: string, subSectionId: string, setReviewModal: React.Dispatch<React.SetStateAction<boolean | null>> }) => {
+const Sidebar = ({ sectionId, subSectionId, setReviewModal }: { sectionId: string, subSectionId: string, setReviewModal: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
     const [activeSection, setActiveSection] = useState<section | null>(null);
     const [activeSubSection, setActiveSubSection] = useState<subSection | null>(null);

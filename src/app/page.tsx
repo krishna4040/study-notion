@@ -9,6 +9,7 @@ import LearningLanguageSection from '../components/core/Home/LearningLanguageSec
 import InstructorSection from '../components/core/Home/InstructorSection'
 import ExploreMore from '../components/core/Home/ExploreMore'
 import Footer from '../components/common/Footer'
+import ReviewSlider from '@/components/common/ReviewSlide'
 
 export default function Home() {
   return (
@@ -146,6 +147,7 @@ export default function Home() {
         <InstructorSection />
 
         <h2 className='text-4xl font-semibold lg:mt-10 mt-7 lg:text-center'>Review from other learners</h2>
+        <ReviewSlider />
 
       </div>
 

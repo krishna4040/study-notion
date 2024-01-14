@@ -51,7 +51,7 @@ export interface RatingAndReview {
     user: user;
     rating: number;
     review: string;
-    course: user;
+    course: course;
 }
 
 export interface section {

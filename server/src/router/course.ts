@@ -61,6 +61,6 @@ router.get("/getCategoryPageDetails/:categoryName", categoryPageDetails);
 // ********************************************************************************************************
 router.post("/createRating", auth, isStudent, createRating)
 router.get("/getAverageRating/:courseId", getAverageRating)
-// router.get("/getReviews", getAllRating)
+router.get("/getReviews", getAllRatingReview);
 
 export default router
