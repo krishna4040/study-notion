@@ -34,10 +34,17 @@ Welcome to our **Edtech Platform** Study-Notion! This application is designed to
 - Course streaming and uploading using cloudinary api
 - completely responsive ui built using React and TailwindCSS
 - Made Production ready with Next.js and maintained type saftey using Typescript
+
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+**Home**
+![home](./public/home.gif)
 
+**Student Dashboard**
+![student](./public/student.gif)
+
+**Instructor Dashboard**
+![ins](./public/instructor.gif)
 
 ## API Reference
 
