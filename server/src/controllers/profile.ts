@@ -4,11 +4,8 @@ import User from "../models/User.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 import Course, { course } from '../models/Course.js';
 import { section } from '../models/Section.js';
-import { convertSecondsToDuration } from '../utils/secToDuration.js'
 import CourseProgress from '../models/CourseProgress.js';
 import { UploadedFile } from 'express-fileupload';
-import { subSection } from '../models/SubSection.js';
-import { convertToSeconds } from '../utils/timeStringTosec.js';
 require('dotenv').config();
 
 export const updateProfile = async (req: Request, res: Response) => {
@@ -40,14 +37,21 @@ export const updateProfile = async (req: Request, res: Response) => {
 export const deleteAccount = async (req: Request, res: Response) => {
     try {
         const id = req.user?.id;
-        const user = await User.findById({ _id: id });
+        const user = await User.findById(id);
         if (!user) {
             throw new Error('user not found');
         }
 
-        await Profile.findByIdAndDelete({ _id: user.additionalDetails });
-        // TODO: Unenroll User From All the Enrolled Courses
-        await User.findByIdAndDelete({ _id: id });
+        await Profile.findByIdAndDelete(user.additionalDetails);
+
+        const enrolledCourses = user.courses;
+        for (let i = 0; i < enrolledCourses.length; i++) {
+            const courseId = enrolledCourses[i];
+            await Course.findByIdAndUpdate(courseId, { $pull: { studentsEnrolled: id } });
+        }
+
+        await User.findByIdAndDelete(id);
+
         res.status(200).json({
             success: true,
             message: "User deleted successfully",

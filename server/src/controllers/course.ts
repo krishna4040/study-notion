@@ -5,9 +5,7 @@ import User from "../models/User"
 import { uploadImageToCloudinary } from "../utils/imageUploader"
 import Section, { section } from '../models/Section'
 import SubSection from '../models/SubSection'
-import { convertSecondsToDuration } from '../utils/secToDuration'
 import { UploadedFile } from 'express-fileupload'
-import { convertToSeconds } from '../utils/timeStringTosec'
 require('dotenv').config();
 
 // Function to create a new course
@@ -148,10 +146,19 @@ export const getInstructorCourses = async (req: Request, res: Response) => {
 
 export const editCourse = async (req: Request, res: Response) => {
     try {
-        const { courseId } = req.body;
-        const updates = req.body;
-        const course = await Course.findById(courseId);
+        const {
+            courseId,
+            courseName = "",
+            courseDescription = "",
+            whatYouWillLearn = "",
+            price = 0,
+            tag = "",
+            categoryId = "",
+            status = "",
+            instructions = ""
+        } = req.body;
 
+        const course = await Course.findById(courseId);
         if (!course) {
             throw new Error('course not found');
         }
@@ -162,20 +169,18 @@ export const editCourse = async (req: Request, res: Response) => {
             course.thumbnail = thumbnailImage.secure_url;
         }
 
-        for (const key in updates) {
-            if (updates.hasOwnProperty(key)) {
-                if (key === "tag" || key === "instructions") {
-                    // course[key] = JSON.parse(updates[key])
-                } else {
-                    // course[key] = updates[key]
-                }
-            }
-        }
-        await course.save()
+        if (courseName) course.courseName = courseName;
+        if (courseDescription) course.courseDescription = courseDescription;
+        if (whatYouWillLearn) course.whatYouWillLearn = whatYouWillLearn;
+        if (price) course.price = price;
+        if (tag) course.tag = tag;
+        if (categoryId) course.category = categoryId;
+        if (status) course.status = status;
+        if (instructions) course.instructions = instructions;
 
-        const updatedCourse = await Course.findOne({
-            _id: courseId,
-        })
+        await course.save();
+
+        const updatedCourse = await Course.findOne({ _id: courseId })
             .populate({
                 path: "instructor",
                 populate: {
@@ -188,7 +193,7 @@ export const editCourse = async (req: Request, res: Response) => {
                 path: "courseContent",
                 populate: "subSection"
             })
-            .exec()
+            .exec();
 
         res.json({
             success: true,
