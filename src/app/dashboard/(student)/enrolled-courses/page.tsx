@@ -66,6 +66,7 @@ const EnrolledCourses = () => {
                                                 <div className='flex gap-5 p-4' onClick={() => {
                                                     router.push(`/view-course/${course._id}/section/${course.courseContent[0]._id}/subSection/${course.courseContent[0].subSection[0]._id}`);
                                                 }}>
+                                                    {/* Todo */}
                                                     <Image src={course.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
                                                     <div>
                                                         <p className='font-medium font-inter text-[#F1F2FF]'>{course.courseName}</p>

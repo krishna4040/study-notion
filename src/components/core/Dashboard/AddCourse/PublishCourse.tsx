@@ -6,6 +6,7 @@ import { COURSE_STATUS } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast';
 
 const PublishCourse = () => {
 
@@ -14,7 +15,7 @@ const PublishCourse = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const { token } = useAppSelector(state => state.auth);
-    const { course } = useAppSelector(state => state.course);
+    const { course, editCourse } = useAppSelector(state => state.course);
 
     const [loading, setLoading] = useState(false);
 
@@ -26,7 +27,7 @@ const PublishCourse = () => {
 
     const submitHandler = async (data: any) => {
         if ((course?.status === COURSE_STATUS.PUBLISHED && getValues("public") === true) || (course?.status === COURSE_STATUS.DRAFT && getValues("public") === false)) {
-            // no update
+            toast.success("course edited");
             dispatch(resetCourseState());
             router.push('/dashboard/my-courses');
             return;
@@ -37,6 +38,7 @@ const PublishCourse = () => {
         setLoading(true);
         const res = await editCourseDetails(formData, token!);
         if (res) {
+            toast.success("course created");
             dispatch(resetCourseState());
             router.push('/dashboard/my-courses');
         }
@@ -52,11 +54,11 @@ const PublishCourse = () => {
                         <input type="checkbox" {...register("public")} className='form-style' />
                         <span>Make this course as public</span>
                     </label>
+                    <div className='flex items-center justify-end w-full gap-4'>
+                        <button className='bg-richblack-900 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5' disabled={loading} type='button' onClick={() => { dispatch(setStep(2)) }}>Back</button>
+                        <button className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black font-semibold' disabled={loading}>Save Changes</button>
+                    </div>
                 </form>
-            </div>
-            <div className='flex items-center justify-end w-full gap-4'>
-                <button className='bg-richblack-800 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-richblack-5' disabled={loading} type='button' onClick={() => { dispatch(setStep(2)) }}>Back</button>
-                <button className='bg-[#FFD60A] px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black' disabled={loading}>Save Changes</button>
             </div>
         </div>
     )

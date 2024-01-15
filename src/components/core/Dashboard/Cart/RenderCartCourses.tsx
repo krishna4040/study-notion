@@ -28,7 +28,7 @@ const RenderCartCourses = () => {
                     return (
                         <div key={idx} className={`flex w-full flex-wrap items-start justify-between gap-6 ${idx !== cart?.length! - 1 && "border-b border-b-richblack-400 pb-6"} ${idx !== 0 && "mt-6"} `}>
                             <div className='flex flex-1 flex-col gap-4 xl:flex-row'>
-                                <Image src={course.thumbnail} alt="course_thumbnail" height={148} width={220} className="h-[148px] w-[220px] rounded-lg object-cover" />
+                                <Image src={course.thumbnail} alt="course_thumbnail" height={148} width={220} className="rounded-lg object-cover" />
                                 <div className='flex flex-col space-y-1'>
                                     <p className='text-lg font-medium text-richblack-5'>{course.courseName}</p>
                                     <p className="text-sm text-richblack-300">{course.category.name}</p>

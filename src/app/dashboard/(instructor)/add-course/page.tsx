@@ -8,9 +8,9 @@ const AddCourse = () => {
                 <h1 className='text-[#F1F2FF] text-3xl font-medium font-inter'>Add Course</h1>
                 <div className='mt-7'><RenderSteps /></div>
             </div>
-            <div className='flex-col gap-2 p-6 border rounded-lg bg-[#161D29] border-[#2C333F] fixed top-20 right-10 w-[450px] hidden lg:flex'>
+            <div className='flex-col gap-2 p-5 border rounded-lg bg-[#161D29] border-[#2C333F] fixed top-20 right-10 w-[400px] hidden lg:flex'>
                 <p className='text-[#F1F2FF] text-lg font-inter font-semibold'>⚡Course Upload Tips</p>
-                <ul className='list-disc space-y-[10px]'>
+                <ul className='list-disc space-y-4 text-xs list-inside'>
                     <li>Set the Course Price option or make it free.</li>
                     <li>Standard size for the course thumbnail is 1024x576.</li>
                     <li>Video section controls the course overview video.</li>

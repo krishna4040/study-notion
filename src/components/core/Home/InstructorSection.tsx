@@ -9,7 +9,7 @@ const InstructorSection = () => {
         <div className='flex flex-col-reverse items-center gap-12 mt-16 lg:gap-20 lg:flex-row'>
 
             <div className='lg:w-1/2'>
-                <Image src={instructor} alt="#" className='w-full shadow-white' />
+                <Image src={instructor} alt="#" className='shadow-white' />
                 <div className='block mt-12 lg:hidden'><Button active={true} linkto={'/signup'} text={'Start learning today'} arrow={true} /></div>
             </div>
 

@@ -48,7 +48,7 @@ const CourseReviewModal = ({ setReviewModal }: { setReviewModal: React.Dispatch<
                 </div>
                 <div className="p-6">
                     <div className="flex items-center justify-center gap-x-4">
-                        <Image src={user?.image!} alt='user-image' width={50} height={50} className="aspect-square w-[50px] rounded-full object-cover" />
+                        <Image src={user?.image!} alt='user-image' width={50} height={50} className="aspect-square rounded-full object-cover" />
                     </div>
                     <div>
                         <p className="font-semibold text-richblack-5">{user?.firstName} {user?.lastName}</p>

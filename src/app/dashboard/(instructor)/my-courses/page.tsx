@@ -7,9 +7,9 @@ import { RiDeleteBin6Line, RiPencilFill } from 'react-icons/ri'
 import { useRouter } from 'next/navigation';
 import { course } from '@/lib/types'
 import Image from 'next/image'
-// import { Table, Tbody, Thead, Th, Tr, Td,  } from 'react-super-responsive-table'
-// import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import Modal, { modalData } from '@/components/common/Modal'
+import { convertToSeconds } from '@/utils/convetToSeconds'
+import { convertSecondsToDuration } from '@/utils/convertToDuration'
 
 const MyCourse = () => {
 
@@ -22,7 +22,6 @@ const MyCourse = () => {
     const getMyCourses = async () => {
         try {
             const response = await fetchInstructorCourses(token!);
-            console.log(response);
             setMyCourses(response);
         } catch (error) {
             console.log("unable to fetch instructor courses");
@@ -39,6 +38,21 @@ const MyCourse = () => {
     useEffect(() => {
         getMyCourses();
     }, []);
+
+    const convertDateToString = (date: Date) => {
+        const str = date.toString().split("T").splice(0, 1).join();
+        return str;
+    }
+
+    const calculateTimeDuration = (course: course) => {
+        let total = 0;
+        course.courseContent.forEach(sec => {
+            sec.subSection.forEach(sub => {
+                total += convertToSeconds(sub.timeDuration);
+            });
+        });
+        return convertSecondsToDuration(total);
+    }
 
     return (
         <div>
@@ -67,18 +81,18 @@ const MyCourse = () => {
 
                                             <td>
                                                 <div className='flex gap-5 p-4'>
-                                                    <Image src={course?.thumbnail} alt="#" height={52} width={52} className='rounded-lg' />
+                                                    <Image src={course?.thumbnail} alt="#" width={300} height={10} />
                                                     <div>
                                                         <p className='font-medium font-inter text-[#F1F2FF]'>{course.courseName}</p>
                                                         <p className='font-inter text-[#838894]'>{course.courseDescription}</p>
-                                                        <p>Created: </p>
-                                                        <p className='uppercase'>{course.status}</p>
+                                                        <p className='text-richblue-400'>Created: {convertDateToString(course.createdAt)}</p>
+                                                        <p className='uppercase text-brown-50'>{course.status}</p>
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td>
-                                                <p className='text-[#838894] p-4'>{course.totalDuration || "2hrs 30min"}</p>
+                                                <p className='text-[#838894] p-4'>{calculateTimeDuration(course)}</p>
                                             </td>
 
                                             <td>
@@ -87,7 +101,7 @@ const MyCourse = () => {
 
                                             <td>
                                                 <div className='flex items-center justify-center gap-1'>
-                                                    <button onClick={() => { router.push(`/dashboard/edit-course/${course._id}`) }}><RiPencilFill className='text-lg text-[#6E727F]' /></button>
+                                                    <button onClick={() => { router.push(`/dashboard/edit-course/${course._id}`) }}><RiPencilFill className='text-2xl text-[#6E727F] hover:text-blue-300 transition-all duration-200' /></button>
                                                     <button onClick={() => {
                                                         setConfirmationModalData({
                                                             text1: "Do you want to delete this course",
@@ -97,7 +111,7 @@ const MyCourse = () => {
                                                             btn1Handler: () => { handleCourseDelete(course._id) },
                                                             btn2Handler: () => { setConfirmationModalData(null) },
                                                         })
-                                                    }}><RiDeleteBin6Line className='text-lg text-[#6E727F]' /></button>
+                                                    }}><RiDeleteBin6Line className='text-2xl text-[#6E727F] hover:text-[#a83232] transition-all duration-200' /></button>
                                                 </div>
                                             </td>
 

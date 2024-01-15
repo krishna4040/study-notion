@@ -51,6 +51,12 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 setValue("courseBenefits", course?.whatYouWillLearn!);
                 setValue("courseCategory", course?.category._id!);
                 setPreviewSource(course?.thumbnail!);
+                if (course?.instructions) {
+                    setRequirementList(course?.instructions);
+                }
+                if (course?.tag) {
+                    setTags(course.tag);
+                }
             }
             setLoading(false);
         } catch (error) {
@@ -100,9 +106,8 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 if (requirementList.toString() !== course?.instructions.toString()) {
                     formData.append("instructions", JSON.stringify(requirementList))
                 }
-                //TODO: Pls check edit course
                 if (previewSource !== course?.thumbnail) {
-                    formData.append("thumbnailImage", previewSource as string);
+                    formData.append("courseImage", imageFile!, imageFile?.name);
                 }
                 setLoading(true);
                 const result = await editCourseDetails(formData, token!);
@@ -135,7 +140,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
     }
 
     return (
-        <div className='mt-7'>
+        <div className='mt-7 w-[600px] mx-auto'>
             <form onSubmit={handleSubmit(submitHandler)} id='form' className='p-6 space-y-8 rounded-md border-richblack-700 bg-richblack-800'>
 
                 <div className='flex flex-col justify-center gap-[6px]'>
@@ -153,7 +158,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 <div className='flex flex-col justify-center gap-[6px]'>
                     <label htmlFor="courseShortDesc" className='font-inter texxt-[#F1F2FF]'>Course Short Description<sup className='text-[#EF476F]'>*</sup></label>
                     <textarea
-                        placeholder='Enter Descriprion'
+                        placeholder='Enter Description'
                         {...register("courseShortDesc", { required: true })}
                         className='w-full form-style'
                         rows={5}
@@ -171,7 +176,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
                         className="relative w-full form-style before:content-['₹'] before:absolute before:top-5 before:w-5"
                         autoComplete='off'
                     />
-                    {errors.coursePrice && <span className='text-pink-500 text-xs'>Course price is Requiered</span>}
+                    {errors.coursePrice && <span className='text-pink-500 text-xs'>Course price is Required</span>}
                 </div>
 
                 <div className='flex flex-col justify-center gap-[6px]'>
@@ -265,7 +270,7 @@ const CourseInformationForm: React.FunctionComponent = () => {
                 <div>
                     {
                         editCourse &&
-                        <button onClick={() => { dispatch(setStep(2)) }}>Continue without saving</button>
+                        <button onClick={() => { dispatch(setStep(2)) }} className='bg-yellow-50 px-6 py-3 rounded-lg flex items-center justify-center mt-6 text-black font-semibold'>Continue without saving</button>
                     }
                 </div>
 

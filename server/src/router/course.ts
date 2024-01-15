@@ -1,9 +1,9 @@
 export { }
-const express = require("express")
+import express from 'express'
 const router = express.Router()
 
 // Course
-import { createCourse, getAllCourses, getCourseDetails, getInstructorCourses } from '../controllers/course'
+import { createCourse, editCourse, getAllCourses, getCourseDetails, getInstructorCourses } from '../controllers/course'
 
 // Categories
 import { categoryPageDetails, createCategory, showAllCategories } from '../controllers/category'
@@ -26,7 +26,9 @@ import { updateCourseProgress } from '../controllers/courseProgress'
 // ********************************************************************************************************
 
 // Courses can Only be Created by Instructors
-router.post("/createCourse", auth, isInstructor, createCourse)
+router.post("/createCourse", auth, isInstructor, createCourse);
+// Edit course
+router.put("/editCourse", auth, isInstructor, editCourse);
 //Add a Section to a Course
 router.post("/addSection", auth, isInstructor, createSection)
 // Update a Section

@@ -14,9 +14,7 @@ const CourseCard = async ({ course }: { course: course }) => {
         <>
             <Link href={`/course/${course._id}`}>
                 <div>
-                    <div className="rounded-lg">
-                        <Image src={course.thumbnail} alt='Course' className={`w-full rounded-xl object-cover`} height={250} width={250} />
-                    </div>
+                    <Image src={course.thumbnail} alt='Course' className={`rounded-xl object-cover`} height={100} width={350} />
                     <div className="flex flex-col gap-2 px-1 py-3">
                         <p className="text-xl text-richblack-5">{course.courseName}</p>
                         <p className="text-sm text-richblack-50">{course.instructor.firstName} {course.instructor.lastName}</p>

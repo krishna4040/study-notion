@@ -195,7 +195,7 @@ export default function EditProfile() {
                     >
                         Cancel
                     </button>
-                    <button>Save</button>
+                    <button className="px-5 py-2 flex items-center gap-2 font-semibold rounded-md cursor-pointer bg-yellow-50 text-black">Save</button>
                 </div>
             </form>
         </>

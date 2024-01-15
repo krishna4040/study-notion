@@ -118,7 +118,7 @@ export const editCourseDetails = async (data: FormData, token: string) => {
     let result = null
     const toastId = toast.loading("Loading...")
     try {
-        const response = await axios.post(EDIT_COURSE_API, data, {
+        const response = await axios.put(EDIT_COURSE_API, data, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`
@@ -130,6 +130,7 @@ export const editCourseDetails = async (data: FormData, token: string) => {
         toast.success("Course Details Updated Successfully")
         result = response?.data?.data
     } catch (error: any) {
+        console.log(error);
         toast.error(error.message)
     }
     toast.dismiss(toastId);

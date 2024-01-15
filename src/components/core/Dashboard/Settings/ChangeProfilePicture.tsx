@@ -83,9 +83,8 @@ export default function ChangeProfilePicture() {
                             >
                                 Select
                             </button>
-                            <button onClick={handleFileUpload}>
-                                upload
-                                {!loading && <FiUpload className="text-lg text-richblack-900" />}
+                            <button onClick={handleFileUpload} className="px-5 py-2 flex items-center gap-2 font-semibold rounded-md cursor-pointer bg-yellow-50 text-black">
+                                upload {!loading && <FiUpload className="text-lg text-richblack-900" />}
                             </button>
                         </div>
                     </div>
