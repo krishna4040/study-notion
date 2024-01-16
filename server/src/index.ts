@@ -17,7 +17,7 @@ cloudinaryConnect();
 
 app.use(
     cors({
-        origin: 'https://study-notion-ten-snowy.vercel.app/',
+        origin: 'https://study-notion-ten-snowy.vercel.app',
         credentials: true
     })
 );
