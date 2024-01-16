@@ -41,6 +41,7 @@
   ],
   "typeRoots": [
     "../node_modules/@types",
+    "../server",
     "./@types"
   ]
 }
