@@ -3,8 +3,11 @@ import React from 'react'
 import { useAppSelector } from '@/lib/hooks'
 import { TbEdit } from 'react-icons/tb'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 
 const MyProfile = () => {
+
+    const params = useSearchParams();
 
     const { user } = useAppSelector(state => state.profile);
     const { image, firstName, lastName, email, additionalDetails: { contactNumber } } = user!;
