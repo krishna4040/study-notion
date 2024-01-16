@@ -1,9 +1,9 @@
 import React from 'react'
 import logo1 from '@/assets/TimeLineLogo/Logo1.svg'
-import logo2 from '@/assets/TimeLineLogo/logo2.svg'
-import logo3 from '@/assets/TimeLineLogo/logo3.svg'
-import logo4 from '@/assets/TimeLineLogo/logo4.svg'
-import timeimg from '@/assets/Images/TimeLineImage.png'
+import logo2 from '@/assets/TimeLineLogo/Logo2.svg'
+import logo3 from '@/assets/TimeLineLogo/Logo3.svg'
+import logo4 from '@/assets/TimeLineLogo/Logo4.svg'
+import timeimg from '@/assets/Images/TimelineImage.png'
 import Image, { StaticImageData } from 'next/image'
 
 interface tl {
