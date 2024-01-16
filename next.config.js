@@ -12,11 +12,6 @@ const nextConfig = {
                 hostname: 'res.cloudinary.com'
             }
         ]
-    },
-    experimental: {
-        outputFileTracingExcludes: {
-            "server": ["./server/**/*"]
-        }
     }
 }
 
